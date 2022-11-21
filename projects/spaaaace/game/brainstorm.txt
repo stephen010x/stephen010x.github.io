@@ -88,4 +88,24 @@ I wonder if I should add harmful creatures that will attack you unless you figur
 
 On the note of what to do for data, I think it is probably a good idea to just have this be arrays. (Though, I should probably look into how much data this would even take, which may not be all that much)
 
-And then I will perhaps convert everything in the main draw function. I think I was planning to put the format loop within the draw rather than outsourcing it to an array or camera prototype. 
+And then I will perhaps convert everything in the main draw function. I think I was planning to put the format loop within the draw rather than outsourcing it to an array or camera prototype.
+
+
+For networking, I should probably just have a player simply be able to host their own game, and to give other's their IP.
+And as for save data, I should perhaps have literal savefiles, and cookies. Cookies for temporary saves, and savefiles for permanant saves. 
+
+Anyway, a hosted game will be pretty lax on security. Mostly because this game is meant to be played with friends, and is for fun. So the only thing that the host will handle is simply letting everyone in the game know and see where everyone is. 
+I suppose there is also the case of synchronizing certain elements of the game, which sounds a bit more prone to lag.
+
+At the same time, it doesn't sound hard to host a server document that is able to change itself, kind of like the cloud. I imagine something like google docs. 
+
+
+You know, 
+For the steam, instead of creating a bunch of points to create the stream, I could just use a curved line that only piecewises whenever the player changes direction or thrust.
+
+I could maybe even just do some math to ensure it is similar to the points by just having a line solver, and whenever the error for the line exceeds a certain amount, or if the player turns in a way that would create a sharp corner (which very well may be within the domain of the error), then it creates a new line. 
+So basically it will create points, but the points aren't what are drawn. Rather the points are used to create a line to represent the points. And the list of points is reset once the most recent line breaks off into a new one.
+
+
+
+ 

@@ -16,7 +16,11 @@ window.onload = (event) => {
 		clearTimeout(timeout);
 		timeout = setTimeout(mouseStillHandler, 500);
 	}
+	console.log("page loaded")
 };
+document.getElementById("game").onload = (event) => {
+	console.log("game scripts loaded")
+}
 
 
 //document.addEventListener("mousemove", mouseMoveHandler); 

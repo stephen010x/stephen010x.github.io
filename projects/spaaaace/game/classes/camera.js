@@ -11,8 +11,8 @@ var cam = {
     y: 0,
     z: 0,
     rot: 0,
-    width: width,
-    height: height,
+    width: game.width,
+    height: game.height,
     //fps: 10,
     //dt: 0,
     //time: 0,
@@ -41,20 +41,20 @@ cam.update = function(dt) {
 };
 
 
-// Convert literal position to screen. Returns object
+// Convert screen position to literal. Returns object
 cam.screen_to_position = function(object) {
     var x = (object.x + cam.x - cam.width/2) * cam.width  / width;
     var y = (object.y + cam.y - cam.height/2) * cam.height / height;
     return {x:x, y:y};
 };
 
-cam.position_to_screen = function(array, distance) {
+// Convert a list of literal positions to screen positions
+cam.position_to_screen = function(array) {
     var _temp = [];
-    var distance = either(distance, 1);
     for (var i = 0; i < array.length; i++) {
-        var object = {x:array[i][0], y:array[i][1]};
-        var x = (object.x - cam.x + cam.width/2 ) * width  / cam.width * (distance); 
-        var y = (object.y - cam.y + cam.height/2) * height / cam.height * (distance);
+        var object = {x:array[i][0], y:array[i][1], z:either(array[i][2],1)};
+        var x = (object.x - cam.x + cam.width/2 ) / object.z * width  / cam.width; 
+        var y = (object.y - cam.y + cam.height/2) / object.z * height / cam.height;
         _temp.push({x:x, y:y});
     }
     return _temp;

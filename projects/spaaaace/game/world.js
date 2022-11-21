@@ -1,16 +1,17 @@
 
 
 //##########################
-// WORLD OBJECT
+// GAME OBJECT
 //##########################
 
-world = {
+var game = {
 	width: window.innerWidth,
 	height: window.innerHeight,
     dt: 0,
     time: 0,
-    frametime: 0,
-    frame: 0,
+	frame: 0,
+    //frametime: 0,
+	//static_dt: 0.03,
 	
     control: {
         thrust: false,
@@ -19,7 +20,14 @@ world = {
         turn_left: false,
         brake: false,
     },
-	
+}
+
+
+//##########################
+// WORLD OBJECT
+//##########################
+
+var world = {
 	items: [],
     layer: Array(4).fill([]),
     logic: Array(10).fill([]),

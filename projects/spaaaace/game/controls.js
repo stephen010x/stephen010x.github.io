@@ -1,5 +1,4 @@
 
-
 var mouse = {
     x: 0,
     y: 0,
@@ -28,24 +27,24 @@ var keycode;
 //##########################
 keyPressed = function() {
     var key = keycode;
-    if (!k.press.contains(keyCode)) {
+    if (!k.press.includes(keyCode)) {
         k.press.push(keyCode);
         k.tap.push(keyCode);
 
-        if ([key.up, key.w, key.space].contains(keyCode)) {
+        if ([key.up, key.w, key.space].includes(keyCode)) {
             game.control.thrust_start = true;
         }
 
-        if ([key.up, key.w, key.space].contains(keyCode)) {
+        if ([key.up, key.w, key.space].includes(keyCode)) {
             game.control.thrust = true;
         }
-        if ([key.left, key.a].contains(keyCode)) {
+        if ([key.left, key.a].includes(keyCode)) {
             game.control.turn_left = true;
         }
-        if ([key.right, key.d].contains(keyCode)) {
+        if ([key.right, key.d].includes(keyCode)) {
             game.control.turn_right = true;
         }
-        if ([key.down, key.s].contains(keyCode)) {
+        if ([key.down, key.s].includes(keyCode)) {
             game.control.brake = true;
         }
 
@@ -58,16 +57,16 @@ keyReleased = function() {
     k.press.remove(keyCode);
     k.release.push(keyCode);
 
-    if ([key.up, key.w, key.space].contains(keyCode)) {
+    if ([key.up, key.w, key.space].includes(keyCode)) {
         game.control.thrust = false;
     }
-    if ([key.left, key.a].contains(keyCode)) {
+    if ([key.left, key.a].includes(keyCode)) {
         game.control.turn_left = false;
     }
-    if ([key.right, key.d].contains(keyCode)) {
+    if ([key.right, key.d].includes(keyCode)) {
         game.control.turn_right = false;
     }
-    if ([key.down, key.s].contains(keyCode)) {
+    if ([key.down, key.s].includes(keyCode)) {
             game.control.brake = false;
     }
 };

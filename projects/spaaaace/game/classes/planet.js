@@ -3,7 +3,7 @@
 /////////////////////////
 
 function Planet(x,y,size,distance){
-    Simulatable.call(this,x,y,1,distance);
+    Locatable.call(this,x,y,1,distance);
     Object.assign(Planet.prototype, Simulatable.prototype);
     
     Polygon.call(this, color(255,255,255));
@@ -19,3 +19,9 @@ function Planet(x,y,size,distance){
         this.poly.push([x,y]);
     }
 }
+
+Planet.prototype.design = function() {
+    fill(this.color);
+};
+
+//Planet.prototype.update = function(dt) {};
