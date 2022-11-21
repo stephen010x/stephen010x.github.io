@@ -23,7 +23,7 @@ var cam = {
     rot: 0,
     width: width,
     height: height,
-    fps: 30,
+    fps: 60,
     dt: 0,
     time: 0,
     distance: 1,
@@ -123,6 +123,8 @@ function setup() {
     cam.y = world.player.y;
     cam.width = cam.init_width;
     cam.height = cam.init_height;
+	
+	renderSetup();
 }
 
 

@@ -1,0 +1,91 @@
+
+Ideas for the game.
+
+So when flying away from massive distant objects, the ship actually flies both away and out from the planet, so it remains on screen, but gets farther and farther away.
+I think all collisions are maintained. The player still travels on the same axis
+
+
+Take some inspiration from Spaceflight Simulator, and how it designed the world as if it was a 3D object, and we can just land on a plane of it.
+
+I should have three planes. The foreground plane, the middleground plane (player's plane), and the background plane.
+
+Asteroids will still (probably) not scale like the planets. 
+
+
+The thing is, that I can't implement a frictionless spaceflight system unless the player can see all obsticles ahead of them.
+It very well may be more pleasing to have space normally extended in-front of you. But if I do that, I will have to cap player speed.
+
+I can still make it frictionless, or relatively frictionless. But I can't have the player go whatever speed they want.
+
+If I want to have the player go lightspeeds, then perhaps disable all small enough objects, and then zoom out a lot. 
+
+
+I wonder if I should add a car mode for driving on planets....
+Say.... What if I made the whole planet an open world for driving in a car. (So you can fly in space, and then drive on land, and then perhaps also swim in water)
+
+I should not make it combat based, but instead have it be exploration and ecological based, where you chart the universe, figure out the orbit of planets, discover new species, etc. You start out with a blank map of the solar system, and then explore from there. (Though, I will want to create ways for the player to find planets.)
+
+I kind of have to consider here the advantage of non-distant objects. The thing is, that it would be nice to provide a sort of background imagery and whatnot.
+
+
+I should make turning slower when thruster is on. (It will make high speed turning more intuitive, especially if it is hard to see which direction your ship is pointing.
+
+I should have forward particles that are closer to the camera, and speed past the camera faster than the middleground. It will really give a 3D aesthetic to it. 
+If I can, I should make it transparent. If not, then perhaps use a circle dot transparency method.
+
+If possible, make it so that jet streams vary in transparency and size. 
+
+Bubble gradients would make for a really cool aesthetic theme. Expecially if we can see them slowly shrink and whatnot for something like the jetstream
+
+Maybe I can make the jetstream a sort of weapon or tool.
+
+It would be cool if the jetstream was a liquid paint that could paint other objects. And imagine enemies that hunt you that you could just push away or blind with your paint.
+
+
+I suddenly want a place where you can collect orbs, all of them physics based. 
+
+
+Due to the new stream mechanics, (which is really satisfying), it would be a shame to eliminate speed turning. I should make it so that the player can turn faster simply when the stream isn't on, and to be able to maintain that turn speed when the stream is reignighted. That way I can technically have both mechanics, and make it more skill based. Though the speed cap is now low enough that maybe I can just have the player turn slow when going fast and the stream is on.
+
+
+It would be cool if the player is capable of navigating without a minimap, and without markers. That zoom out planet idea is a fun idea. 
+
+I should probably add relative and objective layers.
+
+I should add layers to the world, rather than to the objects. That sounds much more like an efficient layering. I will probably start with 3 objective layers, then 1 subjective layer behind them all.
+
+I wonder if I can use the star particles to give the illusion of the player flying towards a planet to explain why it is getting bigger. It probably wouldn't be hard to do if I implement a zoom mechanic, as I can just add the stars to the subjective layer, or even their own special layer, and just have their modulous be a 3 dimensional modulous. That way they actually move around like in a 3D world.
+
+Should a world always be in view of the player? Or perhaps should they only become subjective once you leave their atmosphere?
+
+Add a paint ring around one of the planets. It would be cool if the paint ring was an actual paint ring that you had to swim through to bypass.
+
+
+The planets aren't subject to objective friction, though the player is. So I should probably make it so that either the planets stay still, or so that the player inherits the velocity of the planet as objective space. 
+Though honestly, I can't really see much use of simulated planets. So I will probably have the planets be motionless.
+
+
+Okay, now it is time to come to a consensus about positioning. 
+I am now having to deal with x,y,z positioning. I would prefer keep things as an array, with the z position excluded, and then to just include that when putting it into the camera. Which I guess may work, as the camera returns an object, not modifies it. 
+I should include in the parent simulatable class a way to convert points to 
+
+For overhead meteors that go above the camera (or for any object that goes above the camera) I should just draw them as shadows (scaled to size of zoom).
+It would really only be prevalent if there are meteorites on the same plane to catch the shadow. Though it would be really cool if the planet's ring casts a shadow on the planet. Also if the player casts a shadow on underside meteorites (which I can just darken to show that they are just background elements)
+
+Paint splatters should just be spheres or circles. 
+
+
+If I add spheres as collectables, DO NOT MAKE THEM COMMON AND SCATTERED. Because then it will turn into a grind game. Rather, make them rare to locate, but can be found in large quantities. It is much more rewarding, and much less of a grind to do it that way. 
+
+And adding creatures to this world still seems like a good idea. I should add space creatures too, like perhaps a really spindle looking jellyfish (an alien looking jellyfish)
+
+I should also add snarkers to kind of seem like clustered space fish.
+
+I should have meteorite clusters be rare. That way encounters are less common, allowing for peaceful space flying moments.
+
+I wonder if I should add harmful creatures that will attack you unless you figure out how to "tame" them.
+
+
+On the note of what to do for data, I think it is probably a good idea to just have this be arrays. (Though, I should probably look into how much data this would even take, which may not be all that much)
+
+And then I will perhaps convert everything in the main draw function. I think I was planning to put the format loop within the draw rather than outsourcing it to an array or camera prototype. 
