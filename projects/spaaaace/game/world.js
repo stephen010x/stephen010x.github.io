@@ -10,6 +10,7 @@ var game = {
     dt: 0,
     time: 0,
 	frame: 0,
+	fps: 60,
     //frametime: 0,
 	//static_dt: 0.03,
 	
@@ -27,10 +28,18 @@ var game = {
 // WORLD OBJECT
 //##########################
 
+function arrayfill(count) {
+	var _list = []
+	for (var i = 0; i < count; i++) {
+		_list.push([])
+	}
+	return _list;
+}
+
 var world = {
 	items: [],
-    layer: Array(4).fill([]),
-    logic: Array(10).fill([]),
+    layer: arrayfill(4), //Array(4).fillcopy([])
+	logic: arrayfill(10), //Array(10).fillcopy([])
 }
 
 
@@ -40,7 +49,7 @@ var world = {
 world.build = function() {
 	// Consider stars building themselves. May be faster to draw too.
 	this.sky = new Sky();
-	this.stars = sky.createStars(100)
+	this.stars = this.sky.createStars(100)
     
     var distance = 1;
     this.planet = new Planet(200, 200, 100/distance, distance);
@@ -49,8 +58,8 @@ world.build = function() {
     
     cam.x = this.player.x;
     cam.y = this.player.y;
-    cam.width = cam.init_width;
-    cam.height = cam.init_height;
+    cam.width = cam._width;
+    cam.height = cam._height;
 
     temp_static_dt = 60 * 0.03 / game.fps;   
 }

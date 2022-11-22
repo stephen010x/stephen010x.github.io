@@ -4,7 +4,7 @@
 
 function Planet(x,y,size,distance){
     Locatable.call(this,x,y,1,distance);
-    Object.assign(Planet.prototype, Simulatable.prototype);
+    Object.assign(Planet.prototype, Locatable.prototype);
     
     Polygon.call(this, color(255,255,255));
     Object.assign(Planet.prototype, Polygon.prototype);

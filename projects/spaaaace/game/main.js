@@ -6,11 +6,12 @@
 
 function setup() {
 	console.log("setup started");
+	createCanvas(window.innerWidth, window.innerHeight);
+	game.color = color;
     world.build();
     renderSetup();
 	console.log("setup finished");
 }
-
 
 
 
@@ -23,12 +24,12 @@ var static_dt = 0.03;
 function main() {
     game.time = millis()/1000;
     game.dt = game.time - frametime;
-    frametime = game.time;
     
-    gamelogic(static_dt * 90 / game.fps); //game.dt //0.03
+    gamelogic(static_dt * 60 / game.fps); //game.dt //0.03
     render();
     
     keyboardFrameEnd();
+	game.frame += 1
 }
 // I should probably be fine with using more global variables defined next to theh 
 // functions that plan to use them.

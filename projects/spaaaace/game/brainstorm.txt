@@ -107,5 +107,23 @@ I could maybe even just do some math to ensure it is similar to the points by ju
 So basically it will create points, but the points aren't what are drawn. Rather the points are used to create a line to represent the points. And the list of points is reset once the most recent line breaks off into a new one.
 
 
+After flying around a bit in the demo, I was thinking how fun it would be to have permanant retention on jetstreams. (Well, permanant enough to do what I want them to do)
+See, what made them rather fun, other than being able to paint space, is that I can retrace mysteps using my trail to find out where I used to be. And honestly it is kind of fun following my own trail to make it to the end.
+At the very least, setting up a curve for the lines will save a ton of memory and processing, because once they leave the screen, their accuracy isn't nearly as important. 
+
+I wonder if I should have them collide with the player as well. This is mostly in response to when the player makes a mess, and how it can be an eyesore if permanantly there. 
+
+Oh. What would make this really fun is following the streams of other players. Not so much unknown players, but if these players were your friends, and you were trying to find them. And their streams are different colors.
+I wonder how gravity will mess up these strings. Actually, I think due to the nature of my game, there is no gravity until you enter the atmosphere.
+
+It would be kind of funny though to have meteorites mess up your string path. Though something like that would probably have to be pre-generated, as it would be too costly to compute for everything.
+
+I wonder if I should scale the other players and their streams with the planets, so that it may be possible to see them leave a distant planet or whatnot.
+
+
+
+I am thinking, for global function methods that really are only to be used for one object (are specilized), then I should include them in the module it should be used in.
+
+
 
  

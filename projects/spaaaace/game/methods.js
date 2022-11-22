@@ -81,6 +81,16 @@ Array.prototype.multiply = function(scale) {
     return newlist;
 };
 
+Array.prototype.fillcopy = function(object) {
+	_list = Array(this.length)
+	for (var i = 0; i < this.length; i++) {
+        //this[i] = Object.assign({}, object);
+		_list[i] = Object.assign({}, object)
+    }
+	console.log(_list);
+	return _list;
+}
+
 
 
 

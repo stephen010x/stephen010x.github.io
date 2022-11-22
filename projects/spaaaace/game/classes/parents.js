@@ -14,16 +14,18 @@ function Locatable(x,y,z) {
 
 
 /////////////////////////
-// Simulatable Class
+// Movable Class
 /////////////////////////
-function Movable(x,y,scale,distance,layer) {
-	Locatable.call(this, x,y,1);
-    Object.assign(Simulatable.prototype, Simulatable.prototype);
+function Movable(x,y,z,scale,layer) {
+	Locatable.call(this, x,y,z);
+    Object.assign(Movable.prototype, Locatable.prototype);
 	
     this.scale = either(scale,1);
     this.vx = 0;
     this.vy = 0;
     this.angle = 0;
+	
+	layer = either(layer,0)
     world.logic[layer].push(this);
 }
 
@@ -37,12 +39,4 @@ Movable.prototype.friction = function(dt, friction) {
 };
 
 
-/////////////////////////
-// Drawable Class
-/////////////////////////
-function Drawable(x,y,z,color) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-	this.color = color;
-}
+

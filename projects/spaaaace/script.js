@@ -10,16 +10,21 @@ function mouseMoveHandler() {
 
 var timeout;
 window.onload = (event) => {
+	
 	document.body.style.cursor = 'none';
 	document.body.onmousemove = function(){
 		mouseMoveHandler();
 		clearTimeout(timeout);
 		timeout = setTimeout(mouseStillHandler, 500);
 	}
-	console.log("page loaded")
+	var loadTime = window.performance.timing.domContentLoadedEventEnd- window.performance.timing.navigationStart;
+	console.log("page loaded in " + loadTime/1000 + " Seconds")
+	
 };
-document.getElementById("game").onload = (event) => {
-	console.log("game scripts loaded")
+
+
+function gameLoaded() {
+	console.log('game scripts loaded');
 }
 
 

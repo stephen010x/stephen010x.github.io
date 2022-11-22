@@ -17,7 +17,7 @@
 //##########################
 
 function Sky(count) {
-	var stars = [];
+	this.stars = [];
 	world.items.push(this);
 	world.layer[0].push(this);
 	//world.logic[0].push(this);
@@ -30,13 +30,13 @@ Sky.prototype.createStars = function(count) {
 }
 
 Sky.prototype.draw = function() {
-	for (var i = 1; i < count; i++) {
+	for (var i = 1; i < this.stars.length; i++) {
 		this.stars[i].draw();
 	}
 }
 
 Sky.prototype.update = function(dt) {
-	for (var i = 1; i < count; i++) {
+	for (var i = 1; i < this.stars.length; i++) {
 		this.stars[i].update(dt);
 	}
 }

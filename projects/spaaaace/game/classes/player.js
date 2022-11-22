@@ -4,8 +4,8 @@
 // Player Class
 /////////////////////////
 function Player(x,y){
-    Movable.call(this,x,y,1);
-    Object.assign(Player.prototype, Simulatable.prototype);
+    Movable.call(this,x,y,1,1,0);
+    Object.assign(Player.prototype, Movable.prototype);
     
     Polygon.call(this, color(255,255,255));
     Object.assign(Player.prototype, Polygon.prototype);
@@ -27,15 +27,20 @@ Player.prototype.update = function(dt) {
     this.y += this.vy * dt;
     
     if (game.control.thrust_start) {
-        this.streams.push(new Stream());
-        index += 1;
-        stream = this.streams[index];
+		stream = new Stream();
+		this.streams.push(stream);
+        //this.streams.push(new Stream());
+        //index += 1;
+        //stream = this.streams[index];
     }
     
     if (game.control.thrust) {
+		//console.log(this.streams.length,stream)
         this.vx += dt * this.speed * Math.cos(this.angle);
         this.vy += dt * this.speed * Math.sin(this.angle);
-        stream.burn(-500, this.angle, this, dt);
+		if (game.frame % 20 == 0) {
+			stream.burn(-500, this.angle, this, dt);
+		}
     }
     if (game.control.turn_right) {
         this.angle += dt * this.rotspeed;
@@ -45,6 +50,7 @@ Player.prototype.update = function(dt) {
     }
     
     this.friction(dt, 0.5);
+	
 };
 
 
@@ -61,8 +67,12 @@ Player.prototype.design = function() {
 // Stream Class
 /////////////////////////
 function Stream() {
-    Simulatable.call(this,0,0);
-    Object.assign(Stream.prototype, Simulatable.prototype);
+    Movable.call(this,0,0);
+    Object.assign(Stream.prototype, Movable.prototype);
+	// BUG!!! This doesn't work if locatable rather than movable
+	
+	Locatable.call(this,0,0);
+    Object.assign(Stream.prototype, Locatable.prototype);
     
     Polygon.call(this, color(99, 171, 199, 200));
     Object.assign(Stream.prototype, Polygon.prototype);
@@ -70,6 +80,7 @@ function Stream() {
     this.poly = [];
     this.deltas = [];
     this.age = 0;
+	this.layer = 0;
 }
 
 Stream.prototype.burn = function(velocity,angle,carry,dt) {
@@ -85,28 +96,36 @@ Stream.prototype.burn = function(velocity,angle,carry,dt) {
 
 Stream.prototype.update = function(dt) {
     var streams = world.player.streams;
+	var abs = Math.abs;
     
     if (this !== streams[streams.length - 1] || !game.control.thrust) {
         this.age += dt;
-        this.color = color(99, 171, 199, 200 - this.age*40);
+        this.color = game.color(99, 171, 199, 200 - this.age*40);
     }
-    
-    for (var i = 0; i < this.poly.length; i++) {
-        var point = this.poly[i];
-        var delta = this.deltas[i];
-        point[0] += delta[0]*dt;
-        point[1] += delta[1]*dt;
-        this.pointfriction(dt, 3, delta);
-    }
+	for (var i = this.poly.length - 1; i >= 0; i--) {
+		var point = this.poly[i];
+		var delta = this.deltas[i];
+		if (abs(delta[0]) + abs(delta[1]) < 35) {break;}
+		point[0] += delta[0]*dt;
+		point[1] += delta[1]*dt;
+		this.pointfriction(dt, 3, delta);
+	}
     if (this.age > 5) {
-        world.items.remove(this);
-        world.player.streams.remove(this);
+		this.destroy();
     }
 };
+
 Stream.prototype.pointfriction = function(dt,friction,target) {
     target[0] -= target[0] * friction * dt;
     target[1] -= target[1] * friction * dt;
 };
+
+Stream.prototype.destroy = function() {
+	world.items.remove(this);
+	world.layer[this.layer].remove(this);
+	world.logic[this.layer].remove(this);
+	world.player.streams.remove(this);
+}
 
 
 
