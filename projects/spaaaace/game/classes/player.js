@@ -38,7 +38,7 @@ Player.prototype.update = function(dt) {
 		//console.log(this.streams.length,stream)
         this.vx += dt * this.speed * Math.cos(this.angle);
         this.vy += dt * this.speed * Math.sin(this.angle);
-		if (game.frame % 20 == 0) {
+		if (game.frame % 4 == 0) {
 			stream.burn(-500, this.angle, this, dt);
 		}
     }
