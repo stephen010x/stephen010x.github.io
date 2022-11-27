@@ -126,4 +126,18 @@ I am thinking, for global function methods that really are only to be used for o
 
 
 
+
+Permanantly retaining streams is actually really fun.
+Also, I should consider having the streams adjust themselves as if they were string so as to eliminate high turn curves, so as to allow bigger line fitting curves. Though the real reason I want to add this is that it may make it look better in the long run.
+Also consider some other optimiations, because once the string gets long enough, it does start to slow down the game more and more. It really isn't noticable unless you let go a long line, which frees up the frame rate. 
+
+Also, turns out the terrible random spikes in the fps was not my own code, but rather my computer, being mostly firefox, and perhaps a bit of cold turkey.
+
+
+
+
+
+
+
+
  

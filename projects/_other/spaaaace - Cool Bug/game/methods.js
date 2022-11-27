@@ -22,10 +22,6 @@ function distance(p1, p2) {
     return Math.sqrt( Math.pow( p1.x - p2.x , 2) + Math.pow( p1.y - p2.y , 2) );
 }
 
-function distance2(x1, y1, x2, y2) {
-    return Math.sqrt( Math.pow( x2 - x1 , 2) + Math.pow( y2 - y1 , 2) );
-}
-
 /////////////////////////
 // For default variables. Returns value if variable is undefined.
 function either(variable, value) {

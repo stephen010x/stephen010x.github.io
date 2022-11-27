@@ -94,10 +94,7 @@ mouseReleased = function() {
 mouseMoved = function() {
     mouse.screen.x = mouseX;
     mouse.screen.y = mouseY;
-    Object.assign(mouse, cam.screen_to_position(mouse.screen,1));
-	//world.planet.x = mouse.x;
-	//world.planet.y = mouse.y;
-	//world.planet.z = mouse.z;
+    mouse = Object.assign(mouse, cam.screen_to_position(mouse.screen.x));
 };
 
 mouseDragged = function() { mouseMoved(); };

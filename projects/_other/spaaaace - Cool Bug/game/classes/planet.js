@@ -2,10 +2,9 @@
 // Planet Class
 /////////////////////////
 
-function Planet(x,y,z,size){
-	// Locatable class broken. Fix it.
-    Movable.call(this,x,y,z,1);
-    Object.assign(Planet.prototype, Movable.prototype);
+function Planet(x,y,size,distance){
+    Locatable.call(this,x,y,1,distance);
+    Object.assign(Planet.prototype, Locatable.prototype);
     
     Polygon.call(this, color(255,255,255));
     Object.assign(Planet.prototype, Polygon.prototype);
@@ -24,8 +23,5 @@ function Planet(x,y,z,size){
 Planet.prototype.design = function() {
     fill(this.color);
 };
-
-//Delete this when locatable class fixed
-Planet.prototype.update = function() {}
 
 //Planet.prototype.update = function(dt) {};

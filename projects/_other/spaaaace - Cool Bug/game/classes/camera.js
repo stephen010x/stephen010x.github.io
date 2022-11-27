@@ -41,21 +41,19 @@ cam.update = function(dt) {
 };
 
 // Convert screen position to literal. Returns object
-cam.screen_to_position = function(object, z) {
-	var x = ((object.x / game.width  - 0.5) * cam.width  - 0.5) * (z - cam.z) + cam.x;
-	var y = ((object.y / game.height - 0.5) * cam.height - 0.5) * (z - cam.z) + cam.y;
-    return {x:x, y:y, z:z};
+cam.screen_to_position = function(object) {
+    var x = (object.x + cam.x - cam.width/2) * cam.width  / width;
+    var y = (object.y + cam.y - cam.height/2) * cam.height / height;
+    return {x:x, y:y};
 };
 
 // Convert a list of literal positions to screen positions
-// Change this to accept existing objects so that I don't have to create a new
-// array or object for this. 
 cam.position_to_screen = function(array) {
     var _temp = [];
     for (var i = 0; i < array.length; i++) {
         var object = {x:array[i][0], y:array[i][1], z:either(array[i][2],1)};
-        var x = (((object.x - cam.x) / (object.z - cam.z) + 0.5) / cam.width  + 0.5) * game.width; 
-        var y = (((object.y - cam.y) / (object.z - cam.z) + 0.5) / cam.height + 0.5) * game.height;
+        var x = (((object.x - cam.x) / (object.z - cam.z) + 0.5) / cam.width  + 0.5) * width; 
+        var y = (((object.y - cam.y) / (object.z - cam.z) + 0.5) / cam.height + 0.5) * height;
         _temp.push({x:x, y:y});
     }
     return _temp;

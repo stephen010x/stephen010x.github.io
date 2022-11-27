@@ -39,7 +39,7 @@ Polygon.prototype.updatedpoly = function(z) {
         x += this.x;
         y += this.y;
         //_list.push({x:x,y:y,z:z});
-		_list.push([x,y,z])
+		_list.push([x,y])
     }
     return _list;
 };

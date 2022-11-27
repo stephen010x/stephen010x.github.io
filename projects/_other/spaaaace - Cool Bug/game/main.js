@@ -6,8 +6,9 @@
 
 function setup() {
 	console.log("setup started");
+	createCanvas(window.innerWidth, window.innerHeight);
 	game.color = color;
-    Object.assign(world, new world.build() );
+    world.build();
     renderSetup();
 	console.log("setup finished");
 }
@@ -59,12 +60,10 @@ function gamelogic(dt) {
 //##########################
 
 function renderSetup() {
-	createCanvas(window.innerWidth, window.innerHeight);
-    frameRate(game.fps);
+    frameRate(cam.fps);
 }
 
 function render() {
-	//noSmooth()
     background(0, 0, 0);
     fill(255,255,255);
     noStroke();

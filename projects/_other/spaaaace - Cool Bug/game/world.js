@@ -36,9 +36,6 @@ function arrayfill(count) {
 	return _list;
 }
 
-
-//Should I make world a class (therefore duplicatable), or should it be just a global object?
-// for now I will make it a global object
 var world = {
 	items: [],
     layer: arrayfill(4), //Array(4).fillcopy([])
@@ -51,31 +48,18 @@ var world = {
 /////////////////////////
 world.build = function() {
 	// Consider stars building themselves. May be faster to draw too.
-	//this.sky = new Sky();
-	//this.stars = this.sky.createStars(100)
-	
-	//ChunkHandler();
+	this.sky = new Sky();
+	this.stars = this.sky.createStars(100)
     
     var distance = 1;
-    //this.planet = new Planet(200, 200, 100/distance, distance);
-	
-	this.planets = []
-	for (var i = 0; i < 10; i++) {
-		var x = randInt(-500,500);
-		var y = randInt(-500,500);
-		var z = (1-Math.pow(randFloat(0,1),0.25))*99 + 1; //console.log(z);
-		var size = randInt(100,200);
-		this.planets.push(new Planet(x*z, y*z, z, size*Math.pow(z,0.5)))
-	}
+    this.planet = new Planet(200, 200, 100/distance, distance);
     
-    this.player = new Player(0,0);
+    this.player = new Player(10,10);
     
     cam.x = this.player.x;
     cam.y = this.player.y;
     cam.width = cam._width;
     cam.height = cam._height;
-	
-	this.chunker = new ChunkHandler();
 
-    temp_static_dt = 60 * 0.03 / game.fps;
+    temp_static_dt = 60 * 0.03 / game.fps;   
 }

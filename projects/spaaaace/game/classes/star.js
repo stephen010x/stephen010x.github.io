@@ -12,81 +12,210 @@
 //# Consider the partiles moving on their own like dust. Like Stardust. 
 
 
-//##########################
-// SKY OBJECT
-//##########################
-
-function Sky(count) {
-	this.stars = [];
-	world.items.push(this);
-	world.layer[0].push(this);
-	//world.logic[0].push(this);
-}
-
-Sky.prototype.createStars = function(count) {
-	for (var i = 1; i < count; i++) {
-		this.stars.push(new Star());
-	}
-}
-
-Sky.prototype.draw = function() {
-	for (var i = 1; i < this.stars.length; i++) {
-		this.stars[i].draw();
-	}
-}
-
-Sky.prototype.update = function(dt) {
-	for (var i = 1; i < this.stars.length; i++) {
-		this.stars[i].update(dt);
-	}
-}
-
-
-
 
 //##########################
 // STAR OBJECT
 //##########################
 
-function Star() { //x,y,distance
+function Star(chunk) { //x,y,distance
+	var chunkPos = chunk.truePosition();
 	
-    this.x = randInt(0, width);
-    this.y = randInt(0, width);
-	this.z = randFloat(0.01, 3); //Math.pow(randFloat(-3, 3), 1/3)
-    this.light = randInt(0, 255);
-    //world.items.push(this);
-	//this.p_x = this.x;
-    //this.p_y = this.y;
-    //this._x = this.x;
-    //this._y = this.y;
+	var n = 1;
+	var r = 0;
+
+	var k = 200
+	noiseDetail(1,1); //1,1.5
+	//while (n*2 > r) {
+		this.x = randInt(chunkPos.x, chunkPos.x + chunk.size.x);
+		this.y = randInt(chunkPos.y, chunkPos.y + chunk.size.y);
+		this.z = randFloat(chunkPos.z, chunkPos.z + chunk.size.z); //Math.pow(randFloat(-3, 3), 1/3)
+		var p = Math.PI;
+		n = Math.max(0,Math.min(1,(noise(this.x/k+p,this.y/k+p,this.z/k+p) - 0.08) / 0.3));
+		r = random();
+	//}
+	if (n*2 > r) {return};
+	
+	//var n = Math.max(0,Math.min(1,(noise(this.x/k,this.y/k) - 0.08) / 0.3));
+	console.log(n);
+    //this.light = Math.round(n*255) //Math.round(Math.pow(randFloat(0, 1),1/3)*255);
+	this.light = 255;
+	//console.log(this.light);
+	var screen = cam.position_to_screen([[this.x, this.y, this.z]])[0]
+	this.psx = screen.x;
+	this.psy = screen.y;
+	//this._dx = 0;
+	//this._dy = 0;
+	chunk.items.push(this);
 }
+//Should I make light the same thing as opacity?
 Star.prototype.style = function() {
-    var n = this.light;
-    strokeWeight(1);
-    stroke(n, n, n);
+	//var opacity = Math.max(255/Math.pow(distance,4), 255)
 };
 Star.prototype.draw = function() {
-    this.style();
-	var x = this.x - cam.x * this.distance;
-    var y = this.y - cam.y * this.distance;
-    var star = cam.position_to_screen([x, y])[0];
-    var x2 = x % width;
-    var y2 = y % height;
-    x2 += width  * (x2 < 0);
-    y2 += height * (y2 < 0);
-    var x1 = x2 + (x - this.x);
-    var y1 = y2 + (y - this.y);
-    line(x2,y2,x1,y1);
-    //Fix line wraparound at high speeds. 
-};
-Star.prototype.update = function(dt) {
-    //this.p_x = this.x;
-    //this.p_y = this.y;
-    //this.x = this._x - cam.x * this.distance;
-    //this.y = this._y - cam.y * this.distance;
+	this.style();
+	var screen = cam.position_to_screen([[this.x, this.y, this.z]])[0];
+
+	var distance = this.z - cam.z
+    var n = this.light;
+	var opacity = 1/distance / (distance2(screen.x,screen.y, this.psx,this.psy)/4 + 1/distance) * 255
+    //strokeWeight(1/distance);
+	strokeWeight(2/distance);
+	var color = game.color(n,n,n,opacity)
+    stroke(color);
+	
+	line(screen.x,screen.y, this.psx,this.psy);
+	this.psx = screen.x;
+	this.psy = screen.y;
 };
 
-Star.prototype.shader = function(px,py) {}
+Star.prototype.update = function(dt) {};
+
+Star.prototype.shader = function(px,py) {};
+
+function createStars(count,chunk) {
+	var _list = [];
+	for (var i = 0; i < count; i++) {
+		_list.push(new Star(chunk));
+	}
+	return _list;
+}
+
+
+
+// For generative chunks only, not storative chunks. So no chunk heiarchy
+function Chunk(x,y,z) {
+	this.x = x;
+	this.y = y;
+	this.z = z;
+	this.items = [];
+	//console.log(this);
+}
+
+Chunk.prototype = { //Lets just have it start at origin
+	size: {
+		x: 400,
+		y: 400,
+		z: 0.5,
+	},
+}
+Chunk.prototype.truePosition = function() {
+	return {
+		x: this.x * this.size.x, 
+		y: this.y * this.size.y, 
+		z: this.z * this.size.z, 
+	}
+}
+Chunk.prototype.update = function(dt) {
+	for (var i = 0; i < this.items.length; i++) {
+		this.items[i].update(dt);
+	}
+}
+Chunk.prototype.draw = function() {
+	for (var i = 0; i < this.items.length; i++) {
+		this.items[i].draw();
+	}
+}
+
+// It may actually be overkill to create classes for all of these. 
+// Since these won't be repeated, I should just create custom objects. Not classes.
+/*
+function Plane(start,end) {
+	this.rows = [Row()]
+	this.width = start[0] - end[0]
+	this.height = start[1] - end[1]
+}
+
+function Row(start,end) {
+	this.column = [Column()];
+}
+
+function Column(start,end) {
+	this.chunks = [];
+}*/
+
+
+
+
+// I really need to remove this as a class, and turn it into a global object.
+function ChunkHandler() {
+	world.logic[0].push(this);
+	world.layer[0].push(this);
+	
+	//this.layers = [];
+	//this.chunks = [];
+
+	/*
+	for (var z = cam.z; z - cam.z < depth; z+= Chunk.prototype.size.z) {
+		var start = cam.screen_to_position({x:0, y:0}, z);
+		var end = cam.screen_to_position({x:game.width, y:game.height}, z);
+		
+		for (var x = start.x; start.x + x < end.x; x += Chunk.prototype.size.x) {
+			
+			for (var y = start.y; start.y + y < end.y; y += Chunk.prototype.size.y) {
+				this.chunks.push(new Chunk(x,y,z));
+			}
+		}
+	}*/
+	
+	//this.chunker = []
+	
+	//chunker[z][y][x]
+	
+	this.layers = [];
+	this.chunks = [];
+	
+	var depth = 2;
+	var size = Chunk.prototype.size
+	
+	for (var z = cam.z; z - cam.z < depth; z+= size.z) {
+		var k = Math.floor(z / size.z);
+		var start = cam.screen_to_position({x:0, y:0}, z + size.z);
+		var end = cam.screen_to_position({x:game.width, y:game.height}, z + size.z);
+		
+		var row = []
+		for (var y = start.y; y < end.y; y += size.y) {
+				var j = Math.floor(y / size.y);
+			
+			var column = []
+			for (var x = start.x; x < end.x; x += size.x) {
+			var i = Math.floor(x / size.x);
+				var chunk = new Chunk(i,j,k);
+				this.chunks.push(chunk);
+				column.push(chunk)
+			}
+			row.push(column);
+		}
+		this.layers.push(row);
+	}
+	
+	console.log(this.layers);
+	
+	
+	
+	/*for (var z = 0; z < 3/0.2; z++) {
+		this.chunks.push(new Chunk(0,0,z));
+	}*/
+	
+	//this.chunks.push(new Chunk(0,0,0));
+	
+	for (var i = 0; i < this.chunks.length; i++) {
+		createStars(100,this.chunks[i]);
+	}
+};
+
+ChunkHandler.prototype.draw = function() {
+	for (var i = 0; i < this.chunks.length; i++) {
+		this.chunks[i].draw();
+	}
+};
+
+ChunkHandler.prototype.update = function(dt) {
+	for (var i = 0; i < this.chunks.length; i++) {
+		this.chunks[i].update(dt);
+	}
+};
+
+
 
 /*
 Note for creating a sort of "shader", which is basically a prototype modifier that is executed
@@ -105,45 +234,3 @@ If only I could find a way to overwrite prototypes
 
 
 
-//////////////////////
-// BACKUP
-//////////////////////
-/*
-function Star() { //x,y,distance
-    this.x = randInt(0, width);
-    this.y = randInt(0, width);
-    this.p_x = this.x;
-    this.p_y = this.y;
-    this._x = this.x;
-    this._y = this.y;
-    this.distance = Math.pow(randFloat(-3, 3), 1/3);
-    this.z = distance;
-    //distance of 1 is middleground. Positive is foreground. Negative is background.
-    //Positions are middleground regardless of distance.
-    this.light = randInt(0, 255);
-    world.items.push(this);
-}
-Star.prototype.style = function() {
-    var n = this.light;
-    strokeWeight(1);
-    stroke(n, n, n);
-};
-Star.prototype.draw = function() {
-    this.style();
-    var star = cam.position_to_screen([this.x, this.y])[0];
-    var x2 = this.x % width;
-    var y2 = this.y % height;
-    x2 += width  * (x2 < 0);
-    y2 += height * (y2 < 0);
-    var x1 = x2 + (this.x - this.p_x);
-    var y1 = y2 + (this.y - this.p_y);
-    line(x2,y2,x1,y1);
-    //Fix line wraparound at high speeds. 
-};
-Star.prototype.update = function(dt) {
-    this.p_x = this.x;
-    this.p_y = this.y;
-    this.x = this._x - cam.x * this.distance;
-    this.y = this._y - cam.y * this.distance;
-};
-*/
