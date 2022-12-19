@@ -30,14 +30,14 @@ function Star(chunk) { //x,y,distance
 		this.y = randInt(chunkPos.y, chunkPos.y + chunk.size.y);
 		this.z = randFloat(chunkPos.z, chunkPos.z + chunk.size.z); //Math.pow(randFloat(-3, 3), 1/3)
 		var p = Math.PI;
-		n = Math.max(0,Math.min(1,(noise(this.x/k+p,this.y/k+p,this.z/k+p) - 0.08) / 0.3));
+		n = Math.max(0,Math.min(1,(noise(this.x/k+p,this.y/k+p,this.z*400/k+p) - 0.08) / 0.3));
 		r = random();
 	//}
 	if (n*2 > r) {return};
 	
 	//var n = Math.max(0,Math.min(1,(noise(this.x/k,this.y/k) - 0.08) / 0.3));
 	console.log(n);
-    //this.light = Math.round(n*255) //Math.round(Math.pow(randFloat(0, 1),1/3)*255);
+    //this.light = Math.round(n*255*4) //Math.round(Math.pow(randFloat(0, 1),1/3)*255);
 	this.light = 255;
 	//console.log(this.light);
 	var screen = cam.position_to_screen([[this.x, this.y, this.z]])[0]
@@ -199,7 +199,7 @@ function ChunkHandler() {
 	//this.chunks.push(new Chunk(0,0,0));
 	
 	for (var i = 0; i < this.chunks.length; i++) {
-		createStars(100,this.chunks[i]);
+		createStars(20,this.chunks[i]);
 	}
 };
 

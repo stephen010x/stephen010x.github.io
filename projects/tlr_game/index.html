@@ -1,0 +1,668 @@
+<center>
+<canvas id="can" width="600" height="400" style="border:1px solid #000000;"></canvas>
+</center>
+
+<script>
+//these just add in important stuff like keyboard controlls and get the canvas
+var can = document.getElementById("can");
+var context = can.getContext("2d");
+
+document.addEventListener("keydown",keyDownHandler, false);	
+document.addEventListener("keyup",keyUpHandler, false);
+
+var level = 1;
+
+
+var levels = [
+
+
+//level 1
+[
+[' ',' ',' ',' ',' ',' ',' ','b',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',],
+['b','b','b',' ','b','b','b','b',' ',' ','b','b',' ',' ','b','b','b','b','b','b','b','b','b','b','k','b','b','b','b','w',],
+],
+
+
+//level 2
+[
+[' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','b',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',],
+[' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',],
+[' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','b',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','b',' ',],
+[' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','b','b',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','b','b','b','b','b',' ',],
+['b','b','b','b','b','b','b',' ',' ','b','b','b','b',' ',' ',' ','b','b','b',' ',' ','b','b','b','b','b','b','b','b','b','w',],
+],
+
+
+//level 3
+[
+[' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','b',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',],
+[' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','b',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',],
+[' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','b','b',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',],
+[' ',' ',' ',' ',' ',' ',' ','b',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',],
+[' ',' ',' ',' ',' ',' ',' ','b',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',],
+[' ',' ',' ',' ',' ','p',' ',' ','b',' ',' ',' ',' ','p',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',],
+['b','b','b','b','b','b',' ',' ',' ','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b',' ','b','b','w',],
+],
+
+
+
+
+//level 4 //bryce
+[
+[' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',],
+[' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','p',' ',' ',' ',' ',' ',],
+[' ',' ',' ',' ',' ',' ',' ','b',' ',' ',' ',' ',' ',' ','b','b',' ',' ',' ',' ',' ',' ',' ',' ','b',' ',' ',' ',' ',' ',],
+[' ',' ',' ',' ',' ',' ',' ',' ','b',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','b',' ',' ',' ',' ',' ',' ',' ',],
+[' ',' ',' ',' ',' ','p',' ',' ',' ',' ',' ',' ','p',' ',' ',' ','b',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',],
+[' ',' ',' ',' ',' ','b',' ',' ',' ','b',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','b',' ',' ',' ',' ',' ','b',' ',' ',' ',],
+['b','b','b','b','b','b','k','b','b','b','b','b','b','k','k','k','k','b','b','b','b','k','k','k','b','b','b','b','k','w',],
+],
+
+
+
+
+//level 5
+[
+[' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','b','b','b','b','b','k','k','k','k',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','b','b','b','b','b','b','b','k','b','b',' ','p',' ',' ',' ',' ',' ',' ',' ',' ',' ',],
+[' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','b','b','k','k',' ','p',' ',' ','b','b',' ',],
+[' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','p',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','p',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',],
+[' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','b',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','b','b',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',],
+[' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',],
+[' ',' ',' ',' ',' ',' ',' ',' ','p',' ',' ',' ','p',' ',' ',' ',' ',' ',' ',' ','b','b','b','b','b',' ','b',' ',' ',' ',' ',' ','p',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',],
+['b','b','b','b','b','b','b','b','b','b','b','b','b','k','k','k','b','b','b','b','b','b','b','b','b','k','b',' ',' ','b','k','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','b','k','k','k','k','k','k','k','k','w',],
+],
+
+
+];
+
+
+keys = [];
+function keyDownHandler(event){console.log(event.keyCode); keys[event.keyCode] = true};
+function keyUpHandler(event){console.log(event.keyCode); keys[event.keyCode] = false};
+
+
+context.lineWidth = 0;
+
+
+var paused = true;
+
+
+
+
+var deathCount = 0;
+
+function background(color) {
+  context.fillStyle = color;
+  context.fillRect(0,0,can.width,can.height);
+}
+
+
+var startingCSpeed = 4;
+var cSpeed = startingCSpeed;
+function cameraMoveAuto() {
+  camera.x = camera.x + cSpeed;
+}
+
+
+
+
+var canCollide = [];
+
+
+var collisions = {
+  up: false,
+  down: false,
+  left: false,
+  right: false,
+};
+
+
+var camera = {
+  x: 0,
+  y: 0,
+};
+
+var player = {
+  
+  startingPointY: 300,
+  startingPointX: 30,
+  x: 50,
+  y: 300,
+  w: 40,
+  h: 40,
+};
+function drawPlayer(x,y,w,h,color) {
+  context.fillStyle = 'rgb(20,75,255)'; //This sets the players color to red
+  context.fillRect(x,y,w,h); //This draws the player
+}
+
+
+
+
+
+
+
+
+
+
+
+var mBlockSize = player.w + 10;
+
+function DrawItUp(whatToDraw,x,y) {
+
+  if(whatToDraw === 'b') {
+    collisionBlock(x,y,mBlockSize,mBlockSize,'rgb(38,17,107)');
+  } else if(whatToDraw === 'w') {
+    winnerBlock(x,0);
+  } else if(whatToDraw === 'p') {
+    bPad(x,y,mBlockSize,mBlockSize);
+  } else if(whatToDraw === 'k') {
+    killBrick(x,y,mBlockSize,mBlockSize);
+  }
+
+}
+
+
+
+
+function drawLevel(array) {
+  for(col=array.length - 1;col > -1;col--) {
+    for(row = 0;row<array[col].length;row++) {
+      if(row * mBlockSize - camera.x + mBlockSize > -mBlockSize && row * mBlockSize - camera.x - mBlockSize < can.width) {
+        DrawItUp(array[col][row],row*mBlockSize-camera.x,col*mBlockSize + - (array.length - 2)*mBlockSize + camera.y + player.startingPointY);
+        console.log();
+      } else {
+        
+      }
+
+    }
+  }
+}
+
+
+
+function collisionBlock(x,y,w,h,color) {    
+  context.fillStyle = color;
+  context.fillRect(x,y,w,h);
+  checkInPlayerCollisionBox(x,y,w,h);
+}
+
+
+
+function winnerBlock(x,y) {
+  context.fillStyle = 'rgb(0,255,255)';
+  context.fillRect(x,y,can.width,can.height);
+  if(player.x + player.w >= x) {
+    if(level < levels.length) {
+      level = level + 1;
+      camera.x = 0;
+      camera.y = 0;
+      player.x = player.startingPointX;
+      player.y = player.startingPointY;
+      paused = true;
+    } else {
+      gameWon();
+      paused = true;
+    }
+  }
+};
+
+
+function bPad(x,y,w,h) {
+
+x = x + w/4;
+w = w/2;
+y = y + (h/4)*3;
+h = h/4;
+
+context.fillStyle = 'rgb(255,255,50)';
+context.fillRect(x,y,w,h);
+
+  if(player.x + player.w >= x && player.x <= x + w) {
+    if(player.y + player.h >= y && player.y <= y + w) {
+      bouncePad = true;
+      hitBouncePad = true;
+      jump();
+    }
+  }
+}
+
+function spikes(x,y,w,h,rotation) {
+  if(rotation === up) {
+    triangle(w/2,y+15,x,y+h,x+w,y+h);
+  }
+}
+
+
+function triangle(xa,ya,xb,yb,xc,yc,rot,color) {
+  context.lineWidth = 5;
+  context.strokeStyle = color;
+  drawLine(xa,ya,xb,yb);
+  drawLine(xb,yb,xc,yc);
+  drawLine(xc,yc,xa,ya);
+  context.lineWidth = 0;
+  return checkTcollision(xa,xy,xb,yb,xc,yc,rot);
+}
+
+
+
+function abV(n) {
+  if(n < 0) {
+    n = n *-1;
+  }
+}
+
+
+function checkTcollision(xa,yb,xb,yb,xc,yc,rot) {
+  var runa = abv(xa - xb);
+  var riseA = abv(yb - ya);
+  var a = riseA/runa;
+
+  var runb = abv(xc-xb);
+  var riseb = abv(yb-yc);
+  var b = riseb/runb;
+
+  var runc = abv(xc-xa);
+  var risec = abv(yc-ya);
+  var c = risec/runc;
+
+  if(rotation === 'up') {
+    if(player.y + player.h >= yb && player.y <= yb) {
+      //if(player.x + player.w <= 
+    }
+  } else if(rotation === 'down') {
+
+  } else if(rotation === 'left') {
+
+  } else if(rotation === 'right') {
+
+  }
+}
+
+
+
+
+function killBrick(x,y,w,h) {
+  context.fillStyle = 'rgb(255,0,0)';
+  context.fillRect(x,y,w,h);
+  if(player.x + player.w >=x && player.x <= x + w) {
+    if(player.y + player.h >= y && player.y <= y+h) {
+      checkInPlayerCollisionBox(x,y,w,h);
+      restart();
+      //checkGameLose('killBrick');
+    }
+  }
+}
+
+
+
+
+
+
+
+
+function drawLine(x,y,xa,ya) {
+
+  context.moveTo(x,y);
+  context.lineTo(xa,ya);
+
+}
+
+var boxSize = 25;
+function checkInPlayerCollisionBox(x,y,w,h) {
+  if(player.x + player.w >= x - boxSize && player.x <= x + w + boxSize) {
+    if(player.y + player.h >= y - boxSize && player.y <= y + h + boxSize) {
+      canCollide[canCollide.length] = {
+        x: x,
+        y: y,
+        w: w,
+        h: h,
+      };
+
+    }
+  }
+}
+
+
+var fallSpeed = 0.5;
+var maxFallSpeed = 8;
+var exponentialGrowth = 1.2;
+function fall() {
+  if(collisions.down === false) {
+
+    if(camera.y > 0) {
+      if(camera.y - fallSpeed >= 0) {
+        camera.y = camera.y - fallSpeed;
+      } else {
+        player.y = player.y + (fallSpeed - camera.y);
+        camera.y = 0;
+      }
+    } else {
+      player.y = player.y + fallSpeed;
+    }
+
+    if(fallSpeed < maxFallSpeed) {
+      fallSpeed = fallSpeed * exponentialGrowth;
+    } else {
+      fallSpeed = maxFallSpeed;
+    }
+  }
+}
+
+
+
+
+
+
+var jumpAmount = 100;
+var exponentialDecay = .95;
+var jumping = false;
+var jumpCount = 0;
+var jumpSpeed = 5;
+var jumpMinSpeed = 1;
+var jumpAgain = false;
+var bouncePad = false;
+var hitBouncePad = false
+
+function jump(b) {
+  if(bouncePad === true) {
+    jumpAmount = 200;
+    jumpSpeed = 8;
+    jumping = true;
+    hitBouncePad = true;
+  } else {
+    if(hitBouncePad === false) {
+      jumpAmount = 100;
+      jumpSpeed = 5;
+    }
+  }
+
+
+
+
+  if(b === true && jumping === false) {
+    jumping = true;
+  }
+
+
+
+
+
+  if(jumping === true) {
+    jumpCount = jumpCount + jumpSpeed;
+
+    if(player.y > 50) {
+      player.y = player.y - jumpSpeed;
+    } else {
+      camera.y = camera.y + jumpSpeed;
+    }
+    jumpSpeed = jumpSpeed * exponentialDecay;
+  } else {
+    fall();
+  }
+
+  
+  
+  if(jumpCount >= jumpAmount || collisions.up === true || jumpSpeed < jumpMinSpeed) {
+    hitBouncePad = false;
+    jumping = false;
+    jumpCount = 0;
+    fallSpeed = 1;
+    bouncePad = false;
+    hitBouncePad = false;
+  }
+  
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var padding = 8;
+
+
+var collisionTest = {
+  up: false,
+  down: false,
+  left: false,
+  right: false,
+};
+function collisionCheck(obj) {
+  if(player.y + player.h >= obj.y && player.y + player.h <= obj.y + padding) {
+    if(player.x + player.w >= obj.x + 1 && player.x <= obj.x + obj.w - 1) {
+      collisionTest.down = true;
+      if(player.y + player.h > obj.y) {
+        player.y = obj.y-player.h;
+      }
+    }
+  } else if(player.y <= obj.y + obj.h && player.y >= obj.y + obj.h - padding) {
+    if(player.x + player.w >= obj.x + 1 && player.x <= obj.x + obj.w - 1) {
+      collisionTest.up = true;
+      if(player.y < obj.y + obj.h) {
+        player.y = obj.y + obj.h;
+      }
+    }
+  } else if(player.x + player.w >= obj.x && player.x + player.w <= obj.x + padding) {
+    if(player.y + player.h >=obj.y + padding && player.y <= obj.y + obj.h - padding) {
+      collisionTest.right = true;
+      if(player.x + player.w > obj.x) {
+        collisionTest.right = true;
+        player.x = obj.x - player.w;
+      }
+    }
+  }
+}
+
+
+
+
+
+function collision(array) {  
+  collisionTest = {
+    down: false,
+    up: false,
+    right: false,
+    left: false,
+  };
+
+  for(i=0;i<array.length;i++) {
+    collisionCheck(array[i]);
+  }
+
+console.log(collisionTest.down);
+collisions = collisionTest;
+
+}
+
+
+
+
+
+
+
+function playerControls() {
+  if(keys[32] === true || keys[38] === true || keys[87] === true) {
+    if(collisions.down === true) {
+      jump(true);
+    }
+  }
+}
+
+
+
+function text(txt,x,y,color) {
+  context.font="30px Arial";
+  context.fillStyle = color;
+  context.fillText(txt,x,y);
+}
+
+
+
+function checkGameLose(input) {
+  if(player.x + player.w <= 0 || player.y >= can.height) {
+    //deathCount = deathCount + 1;
+    return 'offScreen';
+    console.log('Gamelose');
+  } else if(input === 'spike') {
+    
+  } else if(input === 'killBrick') {
+    //deathCount = deathCount + 1;
+    fadeToBlack();
+  }
+}
+
+var fading = false;
+var divideBy = 255
+var playerColorR = [100,170/255];
+var playerColorG = [1,1/255];
+var playerColorB = [255,255/255];
+function fadeToBlack() {
+  player.color = 'rgb('+playerColorR[1]+','+playerColorG[1]+','+playerColorB[1]+')';
+  playerColorR[1] = playerColorR[1] - playerColorR[2];
+  playerColorG[1] = playerColorG[1] - playerColorG[2];
+  playerColorB[1] = playerColorB[1] - playerColorB[2];
+
+  if(playerColorB[1] <= 0) {
+    fading = false;
+    playerColorR = [170,170/255];
+    playerColorG = [1,1/255];
+    playerColorB = [255,255/255];
+    reset();
+  } else {
+    fading = true;
+  }
+}
+
+
+
+var count = 0;
+function slowCamera() {
+  console.log('SlowCamera');
+  if(cSpeed > 0) {
+    cSpeed = cSpeed - .05;
+  } else if(count < 100) {
+    count = count+1;
+  }
+  console.log('SlowCamera');
+  if(count>=100) {
+    count = 0;
+    gameLose = false;
+
+    restart();
+  }
+}
+
+
+
+
+function restart() {
+    deathCount = deathCount + 1;
+    camera.x = 0;
+    camera.y = 0;
+    player.x = player.startingPointX;
+    player.y = player.startingPointY;
+    cSpeed = startingCSpeed;
+    paused = true;
+}
+
+
+
+function floatingText(text,x,y,camXstart,camXend,color) {
+  if(camXstart < can.width) {
+    text(text,x,y,color)
+  } else {
+    
+  }
+}
+
+
+var gameBeat = false;
+function gameWon() {
+  paused = true;
+  gameBeat = true;
+}
+
+
+//DrawLoop
+function draw() {
+
+
+  //Checks if the game is paused
+  if(paused===true) {
+    background('#000000');
+    if(gameBeat === false) {
+      drawLevel(levels[level-1]);
+      drawPlayer(player.x,player.y,player.w,player.h,'rgb('+playerColorR[1]+','+playerColorG[1]+','+playerColorB[1]+')');
+      
+      text(deathCount,10,30,'rgb(125,125,125)');
+      text('Level ' + level,100 - camera.x,100,'rgb(255,255,255)');
+      text('Press ENTER to start',60 - camera.x,140, 'rgb(255,255,255)');
+      if(keys[13] === true) {
+        paused = false;
+      }
+    } else {
+      text('Congrats',150,100,'rgb(0,255,255)');
+      text('You beat the game',150,140,'rgb(0,255,255)');
+      text('You died a total of ' + deathCount + ' times',150,180,'rgb(0,125,125)');
+      if(keys[82] === true) {
+        level = 1;
+        deathCount = 0;
+        gameBeat = false;
+        camera.x = 0;
+        camera.y = 0;
+        player.x = player.startingPointX;
+        player.y = player.startingPointY;
+        
+      }
+    }
+  } else {
+    background('#000000');
+      text(deathCount,10,30,'rgb(125,125,125)');
+      text('Level ' + level,100 - camera.x,100,'rgb(255,255,255)');
+      text('Press ENTER to start',60 - camera.x,140, 'rgb(255,255,255)');
+    drawLevel(levels[level - 1]);
+    cameraMoveAuto();
+     //If the game isn't paused...
+  playerControls();
+  jump();
+
+    collision(canCollide);
+    canCollide = [];
+    
+    drawPlayer(player.x,player.y,player.w,player.h,'rgb('+playerColorR[1]+','+playerColorG[1]+','+playerColorB[1]+')');
+
+
+    if(fading === true) {
+      fadeToBlack();
+    }
+    var check = checkGameLose();
+    if(check === 'offScreen') {
+      console.log('GameLose');
+      slowCamera();
+      player.x = player.x - camera.x;
+      
+    }
+    
+    
+    
+    
+
+  }
+requestAnimationFrame(draw); //I honestly have no clue what this does but it makes the animation work
+};
+draw(); //This is also very important
+//can.fillRect(50,50,100,100);		
+//can.clearRect(75,75,100,100);
+		
+</script>

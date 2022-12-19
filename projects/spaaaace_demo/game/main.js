@@ -55,6 +55,8 @@ var keycode;
 
 var world = {
     items: [],
+	logic: [],
+	layer: [],
 };
 
 var game = {
@@ -153,8 +155,8 @@ function main() {
 //##########################
 
 function gamelogic(dt) {
-    for (var i = 0; i < world.items.length; i++) {
-        world.items[i].update(dt);
+    for (var i = 0; i < world.logic.length; i++) {
+        world.logic[i].update(dt);
     }
     cam.update(dt);
 }
@@ -175,8 +177,8 @@ function renderSetup() {
 
 function render() {
     background(0, 0, 0);
-    for (var i = 0; i < world.items.length; i++) {
-        var item = world.items[i];
+    for (var i = 0; i < world.layer.length; i++) {
+        var item = world.layer[i];
         //println(item.poly[0]);
         item.draw();
     }
@@ -200,7 +202,7 @@ function Simulatable(x,y,scale,distance) {
     this.vy = 0;
     this.angle = 0;
     this.distance = either(distance,1);
-    world.items.push(this); //Why did I not think of this sooner???
+    world.logic.push(this); //Why did I not think of this sooner???
 }
 /*Simulatable.prototype.update = function(dt) {
     return null;
@@ -217,6 +219,7 @@ Simulatable.prototype.friction = function(dt, friction) {
 function Polygon(color) {
     this.color = color;
     this.poly = [];
+	world.layer.push(this);
 }
 Polygon.prototype.draw = function() {
     //var parent = cam.position_to_screen(this);
@@ -376,7 +379,8 @@ Stream.prototype.update = function(dt) {
         this.pointfriction(dt, 3, delta);
     }
     if (this.age > 5) {
-        world.items.remove(this);
+        world.logic.remove(this);
+		world.layer.remove(this);
         world.player.streams.remove(this);
     }
 };
@@ -400,7 +404,8 @@ function Star() { //x,y,distance
     //distance of 1 is middleground. Positive is foreground. Negative is background.
     //Positions are middleground regardless of distance.
     this.light = randInt(0, 255);
-    world.items.push(this);
+    world.logic.push(this);
+	world.layer.push(this);
 }
 Star.prototype.style = function() {
     var n = this.light;
