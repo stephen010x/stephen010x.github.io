@@ -1,0 +1,445 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>3D Simulator</title>
+    <style>
+
+    	* { padding: 0; margin: 0; }
+    	canvas { background: #eee; display: block; margin: 0 auto; }
+    </style>
+</head>
+<body>
+
+<canvas id="myCanvas" width="1000" height="700"></canvas>
+
+
+
+<script>
+
+</script>
+
+
+
+
+
+
+<script>
+/*
+	My function rule: 
+	Global variables are uppercased on the start of the second wordf (helloPuppy)
+	Local variables are all uppercase (THISGUY)
+*/
+
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+
+
+var flat = true;
+var playerSpeed = .1;
+var mouseSensitivity = 1; //Pixels
+var playerJump = 20;
+var playerWeight = 100;
+var lives = 3;
+var gravity = 9.8;			//Max human free fall speed is 122 mph
+
+
+
+var x = 0;
+var y = 0;
+var z = 0;
+var r = 0; //Y rotation
+var w = 0; //X rotation
+
+var l;
+var k;
+
+var directX = 0;
+var directZ = 0;
+
+var mapx = 0;
+var mapy = 0;
+var rightPressed = false;
+var leftPressed = false;
+var upPressed = false;
+var downPressed = false;
+var shiftPressed = false;
+var dPressed = false;
+var uPressed = false;
+var scrollForward = false;
+var scrollBackward = false;
+var playerHeight = 100; //Pixels
+var playerWidth = 100; //Pixels
+
+
+var end;
+var start;
+
+
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+document.addEventListener("mousemove", mouseMoveHandler, false);
+
+function keyDownHandler(e) {
+    if(e.keyCode == 39 ||e.keyCode == 68) {
+        rightPressed = true;
+		console.log('rightPressed true');
+    }
+    else if(e.keyCode == 37 ||e.keyCode == 65) {
+        leftPressed = true;
+		console.log('leftPressed true');
+    }
+    else if(e.keyCode == 1 ||e.keyCode == 87) {
+       upPressed = true;
+	   console.log('forwardPressed true');
+    }
+    else if(e.keyCode == 1 ||e.keyCode == 83) {
+        downPressed = true;
+		console.log('backwardPressed true');
+    }
+	else if(e.keyCode == 16) {
+        shiftPressed = true;
+		console.log('shiftPressed true');
+    }
+	else if(e.keyCode == 40) {
+        dPressed = true;
+		console.log('downPressed true');
+    }
+	else if(e.keyCode == 38) {
+        uPressed = true;
+		console.log('upPressed true');
+    }
+	else if(e.keyCode == 38) {
+        scrollForward = true;
+		console.log('upPressed true');
+    }
+	else if(e.keyCode == 38) {
+        scrollBackward = true;
+		console.log('upPressed true');
+    }
+}
+
+
+function keyUpHandler(e) {
+      if(e.keyCode == 39 ||e.keyCode == 68) {
+        rightPressed = false;
+		console.log('rightPressed false');
+    }
+    else if(e.keyCode == 37 ||e.keyCode == 65) {
+        leftPressed = false;
+		console.log('leftPressed false');
+    }
+    else if(e.keyCode == 1 ||e.keyCode == 87) {
+        upPressed = false;
+		console.log('forwardPressed false');
+    }
+    else if(e.keyCode == 1 ||e.keyCode == 83) {
+        downPressed = false;
+		console.log('backwardPressed false');
+	}
+    else if(e.keyCode == 16) {
+        shiftPressed = false;
+		console.log('shiftPressed false');
+    }
+	else if(e.keyCode == 40) {
+        dPressed = false;
+		console.log('downPressed false');
+    }
+	else if(e.keyCode == 38) {
+        uPressed = false;
+		console.log('up false');
+    }
+	else if(e.keyCode == 38) {
+        scrollBackward = false;
+		console.log('up false');
+    }
+}
+
+
+function split(WORD,LETTER) {
+	var str = WORD;
+	return str.substr(START, END);
+}
+
+ function mouseMoveHandler(e) {
+	var relativeX = e.clientX - canvas.offsetLeft;
+	var relativeY = e.clientY - canvas.offsetTop;
+}
+
+function drawWords(word,a,b) {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText(word, a, b); //8,20
+}
+ function drawDot(W,R,size,color) {
+	eval("ctx.fillStyle" + "=" + "'" + color + "';");
+	ctx.beginPath();
+	ctx.arc(W + w * canvas.width/90,R + r , size, 0, Math.PI*2);
+	ctx.fill();
+	ctx.closePath();
+} 
+function drawCube(X,Y,Z,W,H,L){
+	ctx.fillStyle = "#0095DD";
+	ctx.lineWidth=0.5;
+
+
+
+
+
+
+
+
+
+W /=2;
+H /=2;
+L /=2;
+taco =1;
+
+var k=0 //r,w,k
+//y*cos r - z*sin r + x*sin w + y*cos w
+	function posX(A,B,C){//X,Y,Z
+		xx=X-x+W*A;
+		yy=Y-y+L*B;
+		zz=Z-z+H*C;
+
+		xxx = xx*Math.cos(w) - yy*Math.sin(w);
+		yyy = xx*Math.sin(w) + yy*Math.cos(w);
+		zzz = zz;
+
+		yyyy = yyy*Math.cos(r) - zzz*Math.sin(r);
+		zzzz = yyy*Math.sin(r) + zzz*Math.cos(r);
+		xxxx = xxx;
+
+		zzzzz = zzzz*Math.cos(k) - xxxx*Math.sin(k);
+		xxxxx = zzzz*Math.sin(k) + xxxx*Math.cos(k);
+		yyyyy = yyyy;
+		if (!flat){
+			return canvas.height*taco*xxxxx/Math.sqrt(Math.pow(zzzzz,2)+Math.pow(yyyyy,2)*Math.abs(yyyyy)/yyyyy+Math.pow(xxxxx,2)) + canvas.width/2
+		}
+		if (flat){
+			return canvas.height*taco*xxxxx/yyyyy*Math.sqrt(Math.abs(yyyyy)/yyyyy) + canvas.width/2
+		}
+	}
+	function posY(A,B,C){//X,Y,Z
+		xx=X-x+W*A;
+		yy=Y-y+L*B;
+		zz=Z-z+H*C;
+
+		xxx = xx*Math.cos(w) - yy*Math.sin(w);
+		yyy = xx*Math.sin(w) + yy*Math.cos(w);
+		zzz = zz;
+
+		yyyy = yyy*Math.cos(r) - zzz*Math.sin(r);
+		zzzz = yyy*Math.sin(r) + zzz*Math.cos(r);
+		xxxx = xxx;
+
+		zzzzz = zzzz*Math.cos(k) - xxxx*Math.sin(k);
+		xxxxx = zzzz*Math.sin(k) + xxxx*Math.cos(k);
+		yyyyy = yyyy;
+
+		if (!flat){
+			return canvas.height*taco*-zzzzz/Math.sqrt(Math.pow(zzzzz,2)+Math.pow(yyyyy,2)*Math.abs(yyyyy)/yyyyy+Math.pow(xxxxx,2)) + canvas.width/2
+		}
+		if (flat){
+			return canvas.height*taco*-zzzzz/yyyyy*Math.sqrt(Math.abs(yyyyy)/yyyyy) + canvas.width/2
+		}	
+	}
+		ctx.beginPath();
+		
+		//ctx.bezierCurveTo(posX(1,1,1), posY(1,1,1), posX(1,1,-1), posY(1,1,-1), posX(1,1,0), posY(1,1,0)); //posM(X,Y,Z)
+		
+ctx.beginPath();
+//front face
+ctx.moveTo(posX(-1,1,1),posY(-1,1,1));		ctx.quadraticCurveTo(posX(-1,1,0),	posY(-1,1,0),	posX(-1,1,-1),	posY(-1,1,-1));//Left front X,Y,Z
+ctx.lineTo(posX(-1,1,-1),posY(-1,1,-1));	ctx.quadraticCurveTo(posX(0,1,-1),	posY(0,1,-1),	posX(1,1,-1),	posY(1,1,-1));//top front
+ctx.lineTo(posX(1,1,-1),posY(1,1,-1));		ctx.quadraticCurveTo(posX(1,1,0),	posY(1,1,0),	posX(1,1,1),	posY(1,1,1));//Right front
+ctx.lineTo(posX(1,1,1),posY(1,1,1));		ctx.quadraticCurveTo(posX(0,1,1),	posY(0,1,1),	posX(-1,1,1),	posY(-1,1,1));//Bottom front
+ctx.stroke();
+//ctx.fill();
+
+//backface
+ctx.moveTo(posX(-1,-1,1),posY(-1,-1,1));	ctx.quadraticCurveTo(posX(-1,-1,0),	posY(-1,-1,0),	posX(-1,-1,-1),	posY(-1,-1,-1));//Left back
+ctx.lineTo(posX(-1,-1,-1),posY(-1,-1,-1));	ctx.quadraticCurveTo(posX(0,-1,-1),	posY(0,-1,-1),	posX(1,-1,-1),	posY(1,-1,-1));//top back
+ctx.lineTo(posX(1,-1,-1),posY(1,-1,-1));	ctx.quadraticCurveTo(posX(1,-1,0),	posY(1,-1,0),	posX(1,-1,1),	posY(1,-1,1));//Right back
+ctx.lineTo(posX(1,-1,1),posY(1,-1,1));		ctx.quadraticCurveTo(posX(0,-1,1),	posY(0,-1,1),	posX(-1,-1,1),	posY(-1,-1,1));//Bottom back
+ctx.stroke();
+//ctx.fill();
+
+//right face
+ctx.moveTo(posX(1,1,-1),posY(1,1,-1));		ctx.quadraticCurveTo(posX(1,1,0),	posY(1,1,0),	posX(1,1,1),	posY(1,1,1));//front right
+ctx.lineTo(posX(1,-1,1),posY(1,-1,1));		ctx.quadraticCurveTo(posX(1,0,1),	posY(1,0,1),	posX(1,1,1),	posY(1,1,1));//top right
+ctx.moveTo(posX(1,-1,1),posY(1,-1,1));		ctx.quadraticCurveTo(posX(1,-1,0),	posY(1,-1,0),	posX(1,-1,-1),	posY(1,-1,-1));//Right back
+ctx.lineTo(posX(1,-1,-1),posY(1,-1,-1));	ctx.quadraticCurveTo(posX(1,0,-1),	posY(1,0,-1),	posX(1,1,-1),	posY(1,1,-1));//Bottom back
+ctx.stroke();
+//ctx.fill();
+
+//left face
+ctx.moveTo(posX(-1,1,-1),posY(-1,1,-1));	ctx.quadraticCurveTo(posX(-1,1,0),	posY(-1,1,0),	posX(-1,1,1),	posY(-1,1,1));//front right
+ctx.lineTo(posX(-1,-1,1),posY(-1,-1,1));	ctx.quadraticCurveTo(posX(-1,0,1),	posY(-1,0,1),	posX(-1,1,1),	posY(-1,1,1));//top right
+ctx.moveTo(posX(-1,-1,1),posY(-1,-1,1));	ctx.quadraticCurveTo(posX(-1,-1,0),	posY(-1,-1,0),	posX(-1,-1,-1),	posY(-1,-1,-1));//Right back
+ctx.lineTo(posX(-1,-1,-1),posY(-1,-1,-1));	ctx.quadraticCurveTo(posX(-1,0,-1),	posY(-1,0,-1),	posX(-1,1,-1),	posY(-1,1,-1));//Bottom back
+ctx.stroke();
+//ctx.fill();
+
+
+
+		
+		
+		
+	
+/*	ctx.moveTo(posX(1,1,1),		posY(1,1,1),0,0, Math.PI*PERCENT/50);
+	ctx.lineTo(posX(-1,1,1),	posY(-1,1,1),0,0, Math.PI*PERCENT/50);
+	ctx.lineTo(posX(-1,1,-1),	posY(-1,1,-1),0,0, Math.PI*PERCENT/50);
+	ctx.lineTo(posX(1,1,-1),	posY(1,1,-1),0,0, Math.PI*PERCENT/50);
+	ctx.lineTo(posX(1,1,1),		posY(1,1,1),0,0, Math.PI*PERCENT/50);
+	ctx.lineTo(posX(1,-1,1),	posY(1,-1,1),0,0, Math.PI*PERCENT/50);
+	ctx.lineTo(posX(-1,-1,1),	posY(-1,-1,1),0,0, Math.PI*PERCENT/50);
+	ctx.lineTo(posX(-1,-1,-1),	posY(-1,-1,-1),0,0, Math.PI*PERCENT/50);
+	ctx.lineTo(posX(1,-1,-1),	posY(1,-1,-1),0,0, Math.PI*PERCENT/50);
+	ctx.lineTo(posX(1,-1,1),	posY(1,-1,1),0,0, Math.PI*PERCENT/50);
+	ctx.moveTo(posX(-1,-1,1),	posY(-1,-1,1),0,0, Math.PI*PERCENT/50);
+	ctx.lineTo(posX(-1,1,1),	posY(-1,1,1),0,0, Math.PI*PERCENT/50);
+	ctx.moveTo(posX(-1,-1,-1),	posY(-1,-1,-1),0,0, Math.PI*PERCENT/50);
+	ctx.lineTo(posX(-1,1,-1),	posY(-1,1,-1),0,0, Math.PI*PERCENT/50);
+	ctx.moveTo(posX(1,-1,-1),	posY(1,-1,-1),0,0, Math.PI*PERCENT/50);
+	ctx.lineTo(posX(1,1,-1),	posY(1,1,-1),0,0, Math.PI*PERCENT/50);*/
+
+	//ctx.fill();
+	ctx.stroke();
+	ctx.closePath();
+}
+
+function drawcoin(){
+ var character = new Image(); 
+ character.src = "http://cdn05.branchez-vous.com/wp-content/uploads/2016/09/bge2-800x410.jpg";
+ ctx.drawImage(character,canvas.width/2-250,canvas.height/2-250,500,500,canvas.width/2-125-x,canvas.height/2-125-z,250,250); //image,srcX,srcY,width,height,x,y,width,height
+}
+
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+
+var iii=0
+var i=0
+
+	for (i = -2; i < 3; i++) {
+		for (ii = 10; ii < 15; ii++) { 
+			for (iii = -2; iii < 3; iii++) { 
+				drawCube(i,ii,iii,1,1,1);//x,y,z,w,h,l,radius,unknown,rotation percentage
+			}
+		}
+	}
+    
+	drawCube(0,-10,0,100,1,100);//x,y,z,w,h,l,radius,unknown,rotation percentage
+
+/*	drawCube(10,5,0,0,1,7);//x,y,z,w,h,l,radius,unknown,rotation percentage
+	drawCube(12.2,1,-1,10,1,10);//x,y,z,w,h,l,radius,unknown,rotation percentage
+	drawCube(-3,3,5,5,2,1);//x,y,z,w,h,l,radius,unknown,rotation percentage
+	drawCube(-6,0,8,10,1,9);//x,y,z,w,h,l,radius,unknown,rotation percentage
+	drawCube(0,4,6,0,0,12);//x,y,z,w,h,l,radius,unknown,rotation percentage
+	drawCube(1,8,-1,10,1,10);//x,y,z,w,h,l,radius,unknown,rotation percentage*/
+
+//drawCube(0,0,0,1,1,1);//x,y,z,w,h,l,radius,unknown,rotation percentage
+
+	drawWords("X Posision "+x,8,20);
+	drawWords("Y Position "+y,8,40);
+	drawWords("Z Position "+z,8,60);
+	drawWords("X Rotation "+w,8,120);
+	drawWords("Y Rotation "+r,8,140);
+
+
+
+
+	
+	
+
+
+	
+	
+    if(rightPressed) {
+        x += playerSpeed*Math.cos(w);
+		y -= playerSpeed*Math.sin(w);
+    }
+    if(leftPressed) {
+		x -= playerSpeed*Math.cos(w);
+		y += playerSpeed*Math.sin(w);
+    }
+    if(upPressed) {
+		x += playerSpeed*Math.sin(w)
+		y += playerSpeed*Math.cos(w)
+    }
+    if(downPressed) {
+		x -= playerSpeed*Math.sin(w)
+		y -= playerSpeed*Math.cos(w)
+
+    }
+	if(uPressed) {
+        z += playerSpeed;
+    }
+	if(dPressed) {
+        z -= playerSpeed;
+    }
+
+
+    requestAnimationFrame(draw);
+}
+draw();
+
+
+
+function colorGradation(A,PERCENT) {
+	PERCENT /= 100;
+	if (A * PERCENT < 100) {
+		A *= PERCENT;
+	}
+	else {
+		A = 100;
+	}
+	return Math.round(A)
+}
+
+
+
+
+// pointer lock object forking for cross browser
+
+canvas.requestPointerLock = canvas.requestPointerLock ||
+                            canvas.mozRequestPointerLock;
+
+document.exitPointerLock = document.exitPointerLock ||
+                           document.mozExitPointerLock;
+
+canvas.onclick = function() {
+  canvas.requestPointerLock();
+};
+
+// pointer lock event listeners
+
+// Hook pointer lock state change events for different browsers
+document.addEventListener('pointerlockchange', lockChangeAlert, false);
+document.addEventListener('mozpointerlockchange', lockChangeAlert, false);
+
+function lockChangeAlert() {
+  if (document.pointerLockElement === canvas ||
+      document.mozPointerLockElement === canvas) {
+    console.log('pointerLock true');
+    document.addEventListener("mousemove", updatePosition, false);
+  } else {
+    console.log('pointerLock false');  
+    document.removeEventListener("mousemove", updatePosition, false);
+  }
+}
+
+function updatePosition(e) {
+
+  w += e.movementX * mouseSensitivity / 360//* canvas.height/90;
+  r += e.movementY * mouseSensitivity / 360//* canvas.height/90;
+}
+</script>
+
+
+
+
+</body>
+</html>
