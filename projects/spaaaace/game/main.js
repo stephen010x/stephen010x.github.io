@@ -76,6 +76,12 @@ function render() {
             layer[j].draw();
         }
     }
+    fill(255,255,255);
+    stroke(0,0,0);
+    let p = {x: world.player.x.toFixed(2), y: world.player.y.toFixed(2), z: world.player.z.toFixed(2)};
+    let m = {x: world.planets[0].x.toFixed(2), y: world.planets[0].y.toFixed(2), z: world.planets[0].z.toFixed(2)};
+    text(`Player: ${p.x}, ${p.y}, ${p.z}`, 40, 40); 
+    text(`Planet 1: ${m.x}, ${m.y}, ${m.z}, ${world.planets[0].radius.toFixed(2)}`, 40, 60); 
 }
 
 

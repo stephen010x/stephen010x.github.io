@@ -56,16 +56,17 @@ world.build = function() {
 	
 	//ChunkHandler();
     
-    var distance = 1;
+    //var distance = 1;
     //this.planet = new Planet(200, 200, 100/distance, distance);
 	
 	this.planets = []
 	for (var i = 0; i < 10; i++) {
-		var x = randInt(-500,500);
-		var y = randInt(-500,500);
-		var z = (1-Math.pow(randFloat(0,1),0.25))*99 + 1; //console.log(z);
+		var x = randInt(-150000,150000); //randInt(-500,500);
+		var y = randInt(-150000,150000); //randInt(-500,500);
+		var z = (1-Math.pow(randFloat(0,1),0.25))*100000; //console.log(z);
 		var size = randInt(100,200);
-		this.planets.push(new Planet(x*z, y*z, z, size*Math.pow(z,0.5)))
+		//this.planets.push(new Planet(x*z, y*z, z, size*Math.pow(z,0.5)))
+		this.planets.push(new Planet(x, y, z*10, size*Math.sqrt(z,0.5)))
 	}
     
     this.player = new Player(0,0);

@@ -1,0 +1,74 @@
+
+Add a bunch of mechanics involving the jet stream that 
+add a high skill ceiling to the game.
+Well, nto a high skill ceiling, just a lot of tricks
+that you can figure out to better play the game that kind of
+just naturally integrate or combine.
+
+For isntance, if I get rid of the speed ceiling, slowing down
+might be hard. 
+However, The jet stream you send behind you, if you collide into
+it, will slow you down much faster, leading to tricks to 
+slow you down really quickly
+
+It would be cool if there are also tricks to use the stream 
+to boost your speed, adding a high skill ceiling to 
+manuverability.
+
+
+I should create a noise lookup table that makes it so that I
+can just use the lookup table to determine the offset of the
+point created by the noise.
+
+Alternatively, I can create a point without having to
+probabilistically iterate by sampling two perlin noise
+points, or I guess three, and then determine a vector
+to offset the point
+
+Alternatively, I should test how it looks to directly use
+3D perlin noise as the particle offset. Where I sample 3
+perlin noises for the x, y, and z offset.
+
+
+
+Alright. I need a new plan for the formulas for the planets.
+First of all, don't make too small of planets too far away. It causes problems
+In fact, add a safety that makes it so that the spacship won't even attempt to fly towards
+planets that are too small.
+
+Actually, I can still see that being moderately useful. So you can still fly towards
+planets that are small enough unless there are closer ones that override it.
+And I would need to make a smooth transition between overlapping planets, which sounds
+problematic, so add more consideration to this.
+
+Anyway, the formula version isn't working. Now we move on to something else.
+Basically, lets break this down into the fundamentals. 
+
+
+
+
+Lets switch to a hopefully simple solution here. 
+Basically, cones. The player will travel upon cones.
+The player will chose the cone path that is the highest up.
+And it will ignore it when a cone goes beyond the max boundry.
+This way, it is both deterministic, as well as properly
+transitions between two planet cones
+This can be made smoother by selecting two points offset from the player
+that are parallel to the line between the two planets, and then, well...
+Basically we are averaging the slope of two points near the player.
+For now though, just generic cones.
+
+Actually, it can't simply be the highest cone. Because that would cause problems.
+It somehow just needs to be a place where the cones converge.
+I think it is possible to assume that we will never encounter three cones
+converging at once. Simply because in a non-discrete world, that is impossible.
+I think the solution is to simply select the lowest one rather than the highest
+one. The worst this will do is override closer planets with farther ones.
+
+Oh! I think one  major problem is simply the player speed.
+I should slow down their x and y speed such that the z doesn't
+feel way too zoomie.
+That, and a balanced cone such that you can always see your target planet.
+
+
+I should add a button that sort of "zooms" the player out so that they can see more
