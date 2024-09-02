@@ -204,6 +204,8 @@ Stream.prototype.design = function() {
     //stroke(this.color);
     //strokeWeight(5*scale/(this.z - cam.z));
     //noFill();
-    noStroke();
+    //noStroke();
+    stroke(this.color);
+    strokeWeight(1);
     fill(this.color);
 };
