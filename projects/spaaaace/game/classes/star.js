@@ -16,6 +16,7 @@
 //##########################
 // STAR OBJECT
 //##########################
+// CHANGE STARS FROM CIRCLES TO TRIANGLES!
 
 function Star(chunk) { //x,y,distance
 	var chunkPos = chunk.truePosition();
@@ -23,7 +24,7 @@ function Star(chunk) { //x,y,distance
 	var n = 1;
 	var r = 0;
 
-	var k = 200
+	var k = 200;
 	noiseDetail(1,1); //1,1.5
 	//while (n*2 > r) {
 		this.x = randInt(chunkPos.x, chunkPos.x + chunk.size.x);
@@ -36,7 +37,7 @@ function Star(chunk) { //x,y,distance
 	if (n*2 > r) {return};
 	
 	//var n = Math.max(0,Math.min(1,(noise(this.x/k,this.y/k) - 0.08) / 0.3));
-	console.log(n);
+	//console.log(n);
     //this.light = Math.round(n*255*4) //Math.round(Math.pow(randFloat(0, 1),1/3)*255);
 	this.light = 255;
 	//console.log(this.light);
@@ -46,6 +47,8 @@ function Star(chunk) { //x,y,distance
 	//this._dx = 0;
 	//this._dy = 0;
 	chunk.items.push(this);
+
+	console.log(this.x, this.y, this.z);
 }
 //Should I make light the same thing as opacity?
 Star.prototype.style = function() {
@@ -55,10 +58,13 @@ Star.prototype.draw = function() {
 	this.style();
 	var screen = cam.position_to_screen([[this.x, this.y, this.z]])[0];
 
-	var distance = this.z - cam.z
+	var distance = (this.z - cam.z)/1000
     var n = this.light;
 	var opacity = 1/distance / (distance2(screen.x,screen.y, this.psx,this.psy)/4 + 1/distance) * 255
+	//console.log("opacity: ", opacity);
     //strokeWeight(1/distance);
+    // use actual camera functions to calculate a proper stroke weight
+    // and perhaps actual volume ratio math to calculate lower opacity due to blur
 	strokeWeight(2/distance);
 	var color = game.color(n,n,n,opacity)
     stroke(color);
@@ -88,14 +94,14 @@ function Chunk(x,y,z) {
 	this.y = y;
 	this.z = z;
 	this.items = [];
-	//console.log(this);
+	console.log(this);
 }
 
 Chunk.prototype = { //Lets just have it start at origin
 	size: {
 		x: 400,
 		y: 400,
-		z: 0.5,
+		z: 400,
 	},
 }
 Chunk.prototype.truePosition = function() {
@@ -106,9 +112,20 @@ Chunk.prototype.truePosition = function() {
 	}
 }
 Chunk.prototype.update = function(dt) {
+	// vectors would make this way nicer, just sayin'
+	let screen = [cam.position_to_screen([[this.x, this.y, this.z]]),
+				   cam.position_to_screen([[this.x + this.size.x, this.y + this.size.y, this.z + this.size.z]])];
+	//console.log(screen[0].x,screen);
+	//console.log(screen[0].x > cam.width || screen[0].y > cam.height || screen[1].x < 0 || screen[1].y < 0, 
+	//	screen[0].x, cam.width, screen[0].y, cam.height, screen[1].x, screen[1].y)
+	if (screen[0].x > cam.width || screen[0].y > cam.height ||
+		screen[1].x < 0 || screen[1].y < 0 ||
+		this.z - cam.z > this.depth)
+		return -1;
 	for (var i = 0; i < this.items.length; i++) {
 		this.items[i].update(dt);
 	}
+	return 0;
 }
 Chunk.prototype.draw = function() {
 	for (var i = 0; i < this.items.length; i++) {
@@ -140,6 +157,8 @@ function Column(start,end) {
 function ChunkHandler() {
 	world.logic[0].push(this);
 	world.layer[0].push(this);
+
+	this.p = [{x:0, y:0, z:0}, {x:0, y:0, z:0}];
 	
 	//this.layers = [];
 	//this.chunks = [];
@@ -164,15 +183,17 @@ function ChunkHandler() {
 	this.layers = [];
 	this.chunks = [];
 	
-	var depth = 2;
-	var size = Chunk.prototype.size
+	this.depth = 500;
+	let depth = this.depth;
+	
+	var size = Chunk.prototype.size;
 	
 	for (var z = cam.z; z - cam.z < depth; z+= size.z) {
 		var k = Math.floor(z / size.z);
 		var start = cam.screen_to_position({x:0, y:0}, z + size.z);
 		var end = cam.screen_to_position({x:game.width, y:game.height}, z + size.z);
 		
-		var row = []
+		var row = [];
 		for (var y = start.y; y < end.y; y += size.y) {
 				var j = Math.floor(y / size.y);
 			
@@ -181,14 +202,14 @@ function ChunkHandler() {
 			var i = Math.floor(x / size.x);
 				var chunk = new Chunk(i,j,k);
 				this.chunks.push(chunk);
-				column.push(chunk)
+				column.push(chunk);
 			}
 			row.push(column);
 		}
 		this.layers.push(row);
 	}
 	
-	console.log(this.layers);
+	//console.log(this.layers);
 	
 	
 	
@@ -201,19 +222,23 @@ function ChunkHandler() {
 	for (var i = 0; i < this.chunks.length; i++) {
 		createStars(20,this.chunks[i]);
 	}
-};
+}
 
 ChunkHandler.prototype.draw = function() {
 	for (var i = 0; i < this.chunks.length; i++) {
 		this.chunks[i].draw();
 	}
-};
+}
 
 ChunkHandler.prototype.update = function(dt) {
 	for (var i = 0; i < this.chunks.length; i++) {
-		this.chunks[i].update(dt);
+		if (this.chunks[i].update(dt)) {
+			this.chunks.splice(i, 1);
+			i--;
+			console.log("chunk deleted");
+		}
 	}
-};
+}
 
 
 
@@ -234,3 +259,18 @@ If only I could find a way to overwrite prototypes
 
 
 
+//##########################
+// DUMB STAR OBJECT
+//##########################
+// to be used until I get the better one working
+/*
+function DumbStars() {
+	let stars = [];
+	for (let i = 0; i < 100; i++) {
+		
+	}
+}
+
+function DumbStar(ux, uy, uz) {
+	
+}*/

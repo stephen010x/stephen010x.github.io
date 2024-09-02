@@ -155,9 +155,9 @@ Stream.prototype.burn = function(velocity,vector,carry,dt) { //function(velocity
     let vx = velocity * vector.x + carry.vx;
     let vy = velocity * vector.y + carry.vy;
     let vz = velocity * vector.z + carry.vz;
-    let x = carry.x - vx*dt - 10*vector.x;
-    let y = carry.y - vy*dt - 10*vector.y;
-    let z = carry.z - vz*dt - 10*vector.z;
+    let x = carry.x - vx*dt - 5*vector.x;
+    let y = carry.y - vy*dt - 5*vector.y;
+    let z = carry.z - vz*dt - 5*vector.z;
     this.deltas.push([vx, vy, vz]);
     this.trail.push([x, y, z]);
 };

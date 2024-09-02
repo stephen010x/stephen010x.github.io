@@ -12,7 +12,7 @@ function Planet(x,y,z,size){
     
     this.radius = size;
     this.poly = [];
-    var poly_count = 30;
+    var poly_count = 100;
     for (var i = 0; i < poly_count; i++) {
         var angle = 2 * Math.PI / poly_count * i;
         x = Math.cos(angle) * size;

@@ -61,12 +61,31 @@ world.build = function() {
 	
 	this.planets = []
 	for (var i = 0; i < 10; i++) {
+		// not as big
+		//*
+		var x = randInt(-50000,50000); //randInt(-500,500);
+		var y = randInt(-50000,50000); //randInt(-500,500);
+		var z = (1-Math.pow(randFloat(0,1),0.25))*10000; //console.log(z);
+		var size = randInt(100,200);
+		//this.planets.push(new Planet(x*z, y*z, z, size*Math.pow(z,0.5)))
+		this.planets.push(new Planet(x, y, z*10, size*Math.sqrt(z,0.5)))//*/
+		// big planets
+		/*
 		var x = randInt(-150000,150000); //randInt(-500,500);
 		var y = randInt(-150000,150000); //randInt(-500,500);
 		var z = (1-Math.pow(randFloat(0,1),0.25))*100000; //console.log(z);
 		var size = randInt(100,200);
 		//this.planets.push(new Planet(x*z, y*z, z, size*Math.pow(z,0.5)))
-		this.planets.push(new Planet(x, y, z*10, size*Math.sqrt(z,0.5)))
+		this.planets.push(new Planet(x, y, z*10, size*Math.sqrt(z,0.5)))//*/
+	}
+
+	this.decorplanets = [];
+	for (let i = 0; i < 100; i++) {
+		var x = randInt(-50000,50000); //randInt(-500,500);
+		var y = randInt(-50000,50000); //randInt(-500,500);
+		var z = Math.sqrt(randInt(0,5000*2000)); //console.log(z);
+		var size = randInt(10,20);
+		this.decorplanets.push(new Planet(x, y, z*10, size*Math.sqrt(z,0.5)))
 	}
     
     this.player = new Player(0,0);

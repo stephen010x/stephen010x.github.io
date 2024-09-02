@@ -84,20 +84,27 @@ Trail3D.prototype.adjust = function() {
     //console.log(this.trail);
     for (let i = 0; i < len; i++) {
         //console.log(i);
-        let pp = this.trail[i];
-        let pn = either(either(this.trail[i+1], this.trail[i-1]), this.trail[i]);
-        pp = {x: pp[0], y: pp[1], z: pp[2]};
-        pn = {x: pn[0], y: pn[1], z: pn[2]};
-        let dx = pn.x - pp.x;
-        let dy = pn.y - pp.y;
-        let r = Math.sqrt(dx*dx + dy*dy);
-        dx /= r;
-        dy /= r;
-        //poly[i] = {x: pp.x - dy*this.weight, y: pp.y + dx*this.weight};
-        //poly[(len-1)*2-i] = {x: pp.x + dy*this.weight, y: pp.y - dx*this.weight};
-        poly[i] = [pp.x - dy*weight, pp.y + dx*weight, pp.z];
-        //console.log(len, i, (len-1)*2-i, this.trail.length * 2);
-        poly[len*2-1-i] = [pp.x + dy*weight, pp.y - dx*weight, pp.z];
+        if (i == 0 || i == len-1) {
+            let pp = this.trail[i];
+            poly[i] = [pp[0], pp[1], pp[2]];
+            poly[len*2-1-i] = poly[i];
+        } else {
+            let pp = this.trail[i];
+            //let pn = either(either(this.trail[i+1], this.trail[i-1]), this.trail[i]);
+            let pn = this.trail[i+1];
+            pp = {x: pp[0], y: pp[1], z: pp[2]};
+            pn = {x: pn[0], y: pn[1], z: pn[2]};
+            let dx = pn.x - pp.x;
+            let dy = pn.y - pp.y;
+            let r = Math.sqrt(dx*dx + dy*dy);
+            dx /= r;
+            dy /= r;
+            //poly[i] = {x: pp.x - dy*this.weight, y: pp.y + dx*this.weight};
+            //poly[(len-1)*2-i] = {x: pp.x + dy*this.weight, y: pp.y - dx*this.weight};
+            poly[i] = [pp.x - dy*weight, pp.y + dx*weight, pp.z];
+            //console.log(len, i, (len-1)*2-i, this.trail.length * 2);
+            poly[len*2-1-i] = [pp.x + dy*weight, pp.y - dx*weight, pp.z];
+        }
 
     }
     return poly;

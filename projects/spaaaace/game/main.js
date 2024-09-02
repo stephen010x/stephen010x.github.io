@@ -7,7 +7,7 @@
 function setup() {
 	console.log("setup started");
 	game.color = color;
-    Object.assign(world, new world.build() );
+    Object.assign(world, new world.build());
     renderSetup();
 	console.log("setup finished");
 }
@@ -76,12 +76,14 @@ function render() {
             layer[j].draw();
         }
     }
+    
     fill(255,255,255);
     stroke(0,0,0);
-    let p = {x: world.player.x.toFixed(2), y: world.player.y.toFixed(2), z: world.player.z.toFixed(2)};
-    let m = {x: world.planets[0].x.toFixed(2), y: world.planets[0].y.toFixed(2), z: world.planets[0].z.toFixed(2)};
-    text(`Player: ${p.x}, ${p.y}, ${p.z}`, 40, 40); 
-    text(`Planet 1: ${m.x}, ${m.y}, ${m.z}, ${world.planets[0].radius.toFixed(2)}`, 40, 60); 
+    strokeWeight(1);
+    let p = {x: world.player.x, y: world.player.y, z: world.player.z};
+    //let m = {x: world.planets[0].x.toFixed(2), y: world.planets[0].y.toFixed(2), z: world.planets[0].z.toFixed(2)};
+    text(`Player:\n\t\tx: ${p.x | 0}\n\t\ty: ${p.y | 0}\n\t\tz: ${p.z | 0}`, 40, 40); 
+    //text(`Planet 1: ${m.x}, ${m.y}, ${m.z}, ${world.planets[0].radius.toFixed(2)}`, 40, 60); 
 }
 
 
