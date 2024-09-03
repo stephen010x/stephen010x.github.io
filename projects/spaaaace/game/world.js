@@ -20,6 +20,7 @@ var game = {
         turn_right: false,
         turn_left: false,
         brake: false,
+        zoom: false,
     },
 }
 

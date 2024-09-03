@@ -31,11 +31,11 @@ keyPressed = function() {
         k.press.push(keyCode);
         k.tap.push(keyCode);
 
-        if ([key.up, key.w, key.space].includes(keyCode)) {
+        if ([key.up, key.w/*, key.space*/].includes(keyCode)) {
             game.control.thrust_start = true;
         }
 
-        if ([key.up, key.w, key.space].includes(keyCode)) {
+        if ([key.up, key.w/*, key.space*/].includes(keyCode)) {
             game.control.thrust = true;
         }
         if ([key.left, key.a].includes(keyCode)) {
@@ -47,7 +47,9 @@ keyPressed = function() {
         if ([key.down, key.s].includes(keyCode)) {
             game.control.brake = true;
         }
-
+        if (key.space == keyCode) {
+            game.control.zoom = true;
+        }
     }
 };
 
@@ -57,7 +59,7 @@ keyReleased = function() {
     k.press.remove(keyCode);
     k.release.push(keyCode);
 
-    if ([key.up, key.w, key.space].includes(keyCode)) {
+    if ([key.up, key.w/*, key.space*/].includes(keyCode)) {
         game.control.thrust = false;
     }
     if ([key.left, key.a].includes(keyCode)) {
@@ -67,7 +69,10 @@ keyReleased = function() {
         game.control.turn_right = false;
     }
     if ([key.down, key.s].includes(keyCode)) {
-            game.control.brake = false;
+        game.control.brake = false;
+    }
+    if (key.space == keyCode) {
+        game.control.zoom = false;
     }
 };
 
@@ -113,7 +118,7 @@ mouseOut = function() {
 
 
 keycode = {
-backspace:8, tab:9, enter:13, shift:16,
+backspace:8, tab:9, enter:13, shift:16, space:32,
 ctrl:17, alt:18, caps:20, esc:27,
 left:37, up:38, right:39, down:40,
 0:48, 1:49, 2:50, 3:51, 4:52, 

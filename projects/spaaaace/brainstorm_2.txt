@@ -72,3 +72,84 @@ That, and a balanced cone such that you can always see your target planet.
 
 
 I should add a button that sort of "zooms" the player out so that they can see more
+
+
+
+FEATURES TO ADD:
+------------------
+- Jet stream:
+	- Cull uneccissary points
+	- Fake brightness
+	- Brightness, then blue, then gradually dims to grey
+	- Expands then skrinks, making it feel more like thruster
+		exhaust
+	- Don't make it dissapear. Just add a max polygon limit tied
+		to transparency
+- Triangle stars
+	- stars move when you pass them? (not sure how to pull that off)
+- planets:
+	- Planet gravity. Give weight to planet take offs
+	- planet atmosphere
+	- plane burns in atmosphere when it goes too fast
+- Smoother z-plane
+- Change speed limits.
+- Add fuel
+- Add zoom
+- Pause execution when not focused
+
+
+
+You know, I can probably heavily optimize the slowest thing in the game, the trail,
+By simply having them split into a new stream every time my character turns.
+(So pressing right would start a new trail, and then releasing right would start another)
+(Which would be fine if I disable them dissapearing.)
+That way I can either assign a box size to them, or just test several points
+within it to determine whether or not it is within the screen and should be rendered.
+That, combined with the polygon reduction (which by the way, should just be done
+to the entire stream by a dedicated loop once the entire thing has exited physics
+status)
+Also it should just generally be faster by javascript standards when needing to
+remove an item from a list. It doesn't need to adjust the entire thing.
+
+Honestly, with how my contrails now work, being separated by each change in rotation,
+It would probably work just fine to simply test both end points to see if it is either
+rendered on screen, and also, to just render it as a simple line if far enough away.
+I will probably need to either duplicate points or somehow fake a connection
+between two different connected streams
+
+
+Consider object pooling for optimization
+
+
+
+I should call the trail optimizer call "petrify()"
+I am realizing I should only optimize it after the stream is completely dead
+including colors. Because gradient color changes might not look good otherwise.
+Although, if the color change is gradient enough, then it is probably fine.
+In which case I could have two stages. The first is to petrify, which culls
+polygons, which happens as soon as a stream stopped moving.
+And the second is to just when it's colors has completely died down, and
+it's gradient behavior killed.
+On that note, I can just make the stream itself gradient rather than each 
+individual polygon/point. It would make it a lot more optimized when there
+are a bunch of streams.
+
+
+Also, I much prefer the slimmer size of the stream in the original version.
+Luckily stream expansion can come in handy with this.
+I can have the stream actually indivdually expanding and contracting while still in physics mode.
+And then when physics mode dies the stream itself is what determines the weight growth over time.
+
+
+https://open.spotify.com/track/7xXQh52SZq9Af2DHQ4GNHI?si=d2d25e47fe434074
+
+
+
+Good god, I think reading through my code gave me inspiration for a new input philosophy!
+
+Basically, instead of objects reading inputs to move like the player, instead
+a dedicated input device gives objects like the player commands.
+
+
+Imagine if the entirety of the player's motion is on a ginroous sphere, such that you
+can actually see other people's paths below you.

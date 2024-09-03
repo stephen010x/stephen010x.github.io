@@ -18,6 +18,8 @@ var cam = {
     //dt: 0,
     //time: 0,
     dw: 0,
+    zoom: 0,
+    pz: 0,
 };
 cam._width = cam.width;
 cam._height = cam.height;
@@ -33,18 +35,40 @@ cam.update = function(dt) {
     var dy = player.y - cam.y;
     var mx = dx * 0.1;
     var my = dy * 0.1;
-    
-    cam.x = cam.x + mx + player.vx/15;
-    cam.y = cam.y + my + player.vy/15;
+
+    if (this.zoom < 30) {
+        cam.x = cam.x + mx + player.vx/15;
+        cam.y = cam.y + my + player.vy/15;
+    }
     
     /*var dw = ((0 + speed/3) + cam.z*500)*dt*1;
     
 	cam.z -= dw/100;*/
 
+	if (game.control.zoom) {
+	    this.zoom < 100 && this.zoom++;
+	} else {
+	    this.zoom > 0 && this.zoom--;
+	}
+
+    let m = 50000;
+    let k = 10;
+	let zoom = m/(1+2**(-10*(this.zoom/k-2)))
+	console.log(zoom);
+
     cam.dw += speed/1e4;
     cam.dw *= 0.9;
 
-	cam.z = player.z - cam.depth - cam.dw;
+    if (this.zoom == 0) {
+        this.pz = cam.z
+    }
+
+    if (this.zoom < 30) {
+        cam.z = player.z - cam.depth - cam.dw - zoom;
+    } else {
+        //cam.z = player.z - cam.depth - cam.dw - zoom;
+        cam.z = this.pz - zoom;
+    }
 };
 
 // Convert screen position to literal. Returns object

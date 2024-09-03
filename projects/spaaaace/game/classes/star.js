@@ -34,6 +34,7 @@ function Star(chunk) { //x,y,distance
 		n = Math.max(0,Math.min(1,(noise(this.x/k+p,this.y/k+p,this.z*400/k+p) - 0.08) / 0.3));
 		r = random();
 	//}
+	// this is what distributes them in a pattern
 	if (n*2 > r) {return};
 	
 	//var n = Math.max(0,Math.min(1,(noise(this.x/k,this.y/k) - 0.08) / 0.3));
@@ -48,7 +49,7 @@ function Star(chunk) { //x,y,distance
 	//this._dy = 0;
 	chunk.items.push(this);
 
-	console.log(this.x, this.y, this.z);
+	//console.log(this.x, this.y, this.z);
 }
 //Should I make light the same thing as opacity?
 Star.prototype.style = function() {
@@ -89,19 +90,23 @@ function createStars(count,chunk) {
 
 
 // For generative chunks only, not storative chunks. So no chunk heiarchy
+// also this used to be generic, but I kinda mutated it into a star exclusive chunk
 function Chunk(x,y,z) {
 	this.x = x;
 	this.y = y;
 	this.z = z;
 	this.items = [];
-	console.log(this);
+	//console.log(this);
+
+	// mutation starts here
+	createStars(20,this);
 }
 
 Chunk.prototype = { //Lets just have it start at origin
 	size: {
-		x: 400,
-		y: 400,
-		z: 400,
+		x: 500,
+		y: 500,
+		z: 500,
 	},
 }
 Chunk.prototype.truePosition = function() {
@@ -111,22 +116,25 @@ Chunk.prototype.truePosition = function() {
 		z: this.z * this.size.z, 
 	}
 }
-Chunk.prototype.update = function(dt) {
+Chunk.prototype.update = function(dt, dep) {
+	let depth = either(dep, 500);
 	// vectors would make this way nicer, just sayin'
-	let screen = [cam.position_to_screen([[this.x, this.y, this.z]]),
-				   cam.position_to_screen([[this.x + this.size.x, this.y + this.size.y, this.z + this.size.z]])];
-	//console.log(screen[0].x,screen);
-	//console.log(screen[0].x > cam.width || screen[0].y > cam.height || screen[1].x < 0 || screen[1].y < 0, 
-	//	screen[0].x, cam.width, screen[0].y, cam.height, screen[1].x, screen[1].y)
-	if (screen[0].x > cam.width || screen[0].y > cam.height ||
+	// added mutation that will delete chunk when no longer visable
+	let pos = this.truePosition();
+	let size = this.size;
+	let temp = [[pos.x, pos.y, pos.z + size.z], [pos.x + size.x, pos.y + size.y, pos.z + size.z]]
+	let screen = cam.position_to_screen(temp);
+	if (screen[0].x > game.width || screen[0].y > game.height ||
 		screen[1].x < 0 || screen[1].y < 0 ||
-		this.z - cam.z > this.depth)
+		pos.z - cam.z > depth || pos.z + size.z - cam.z < 0)
+		//console.log("gop:", screen, game.width, game.height, pos, cam.z, depth)
 		return -1;
 	for (var i = 0; i < this.items.length; i++) {
 		this.items[i].update(dt);
 	}
 	return 0;
 }
+
 Chunk.prototype.draw = function() {
 	for (var i = 0; i < this.items.length; i++) {
 		this.items[i].draw();
@@ -158,10 +166,12 @@ function ChunkHandler() {
 	world.logic[0].push(this);
 	world.layer[0].push(this);
 
-	this.p = [{x:0, y:0, z:0}, {x:0, y:0, z:0}];
+	// captures last place chunks were generated
+	//this.p = {x:0, y:0, z:0};
 	
 	//this.layers = [];
 	//this.chunks = [];
+	this.chunks = {};
 
 	/*
 	for (var z = cam.z; z - cam.z < depth; z+= Chunk.prototype.size.z) {
@@ -179,6 +189,7 @@ function ChunkHandler() {
 	//this.chunker = []
 	
 	//chunker[z][y][x]
+	/*
 	
 	this.layers = [];
 	this.chunks = [];
@@ -207,7 +218,7 @@ function ChunkHandler() {
 			row.push(column);
 		}
 		this.layers.push(row);
-	}
+	}*/
 	
 	//console.log(this.layers);
 	
@@ -219,23 +230,71 @@ function ChunkHandler() {
 	
 	//this.chunks.push(new Chunk(0,0,0));
 	
-	for (var i = 0; i < this.chunks.length; i++) {
+	/*for (var i = 0; i < this.chunks.length; i++) {
 		createStars(20,this.chunks[i]);
-	}
+	}*/
 }
 
 ChunkHandler.prototype.draw = function() {
-	for (var i = 0; i < this.chunks.length; i++) {
+	/*for (var i = 0; i < this.chunks.length; i++) {
 		this.chunks[i].draw();
+	}*/
+	for (let key in this.chunks) {
+		this.chunks[key].draw();
 	}
 }
 
 ChunkHandler.prototype.update = function(dt) {
-	for (var i = 0; i < this.chunks.length; i++) {
+	// What if instead of generating chunks like this, 
+	// I instead just update chunks only in the viewport
+	// sort of like a hashed array with positions
+	// and if a chunk doesn't exist there, then I create one.
+	/*for (var i = 0; i < this.chunks.length; i++) {
 		if (this.chunks[i].update(dt)) {
 			this.chunks.splice(i, 1);
 			i--;
-			console.log("chunk deleted");
+			//console.log("chunk deleted");
+		}
+	}
+	let size = Chunk.prototype.size;
+	*/
+	//while (p.x - cam.x > size.x) {}
+
+	let size = Chunk.prototype.size;
+	let depth = 3*size.z;
+
+	let snap = function(n) {
+		return {
+			x: ((n.x / size.x) >> 0) * size.x, 
+			y: ((n.y / size.y) >> 0) * size.y, 
+			z: ((n.z / size.z) >> 0) * size.z,
+			width: ((n.width / size.x) >> 0) * size.x,
+			height: ((n.height / size.y) >> 0) * size.y,
+			depth: ((n.depth / size.z) >> 0) * size.z
+		};
+	}
+
+	let scam = snap(cam);
+
+	// I forgot to cast to screen coordiantes for the x and y of each z
+	for (let z = scam.z; z < scam.z + depth; z += size.z) {
+		for (let y = scam.y - size.y; y < scam.y + scam.height; y += size.y) {
+			for (let x = scam.x - size.x; x < scam.x + scam.width; x += size.x) {
+				let index = [x, y, z].toString();
+				if (!(index in this.chunks)) {
+					//console.log("gep:", x, y, z);
+					var chunk = new Chunk((x/size.x)>>0, (y/size.y)>>0, (z/size.z)>>0);
+					this.chunks[index] = chunk;
+					//this.layers.push(chunk);
+					//console.log(chunk);
+					//console.log(chunk);
+				}
+			}
+		}
+	}
+	for (let key in this.chunks) {
+		if (this.chunks[key].update(dt, depth)) {
+			delete this.chunks[key];
 		}
 	}
 }
