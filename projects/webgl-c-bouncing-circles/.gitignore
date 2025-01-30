@@ -1,0 +1,43 @@
+# Prerequisites
+*.d
+
+# Object files
+*.o
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+
+# Executables
+*.exe
+*.out
+*.hex
+
+# Other
+*.old
+*.tmp
+*.temp
+*.backup
+*.back
+
+# Directories
+bin/
+tmp/
+_old/
+gen/
+
+# Specific
+src/macros/macro_extensions.h
+src/macros/macros_ext.h
+*.pp.h
