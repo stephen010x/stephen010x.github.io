@@ -1,6 +1,6 @@
-[submodule "projects/portfolio"]
-	path = projects/portfolio
-	url = https://github.com/stephen010x/portfolio.git
-[submodule "projects/webgl-c-frame"]
-	path = projects/webgl-c-frame
-	url = https://github.com/stephen010x/webgl-c-frame.git
+#[submodule "projects/portfolio"]
+#	path = projects/portfolio
+#	url = https://github.com/stephen010x/portfolio.git
+#[submodule "projects/webgl-c-frame"]
+#	path = projects/webgl-c-frame
+#	url = https://github.com/stephen010x/webgl-c-frame.git
