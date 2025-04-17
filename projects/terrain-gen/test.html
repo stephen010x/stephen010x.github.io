@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width"> 
+        <!-- disable the damn caching! -->
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="0"/>
+
+        <title>webgl-c-frame</title>
+
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico?">
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            button {
+	            width: 100%;
+	            height: 200px;
+	            text-align: center;
+	        }
+            #canvas {
+                /*width: 768px;
+                height: 768px;*/
+                /*width: 100vw;
+                height: 100vh;*/
+                /*width: 256px;
+                height: 256px;*/
+            }
+            canvas {
+                image-rendering: optimizeSpeed;             /*Older versions of FF*/
+                image-rendering: -moz-crisp-edges;          /*FF 6.0+*/
+                image-rendering: -webkit-optimize-contrast; /*Safari*/
+                image-rendering: -o-crisp-edges;      /*OS X & Windows Opera (12.02+)*/
+                image-rendering: pixelated;                 /*Awesome future-browsers*/
+                -ms-interpolation-mode: nearest-neighbor;   /*IE*/
+            }
+            html, body {margin: 0; height: 100%;}
+
+            #controls {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 700px;
+                background-color: rgba(0, 0, 0, 0.8);
+                color: white;
+                text-align: left;
+                padding: 0px 200px;
+                margin: 0;
+                white-space: pre;
+                font-family: monospace;
+            }
+        </style>
+
+        <script>
+            window.onload = function() {
+                console.log('All resources have completely loaded');
+            }
+        </script>
+        
+        <script src="script.js"></script>
+    </head>
+    
+    <body style="background-color:lightgrey;">
+
+    	</div>
+
+        <div id="media"></div>
+
+        <script>
+            const type_list = [
+                "tex",
+                "norm",
+                "disp",
+                "occl",
+            ];
+        
+            const asset_list = [
+                ["wetrock", 256 ],
+                ["sand",    256 ],
+                ["cliffs",  512 ],
+                ["water",   1024],
+                ["moss",    1024],
+            ];
+            
+            for (let i = 0; i < asset_list.length; i++) {
+                let div = document.getElementById("media");
+                let [name, size] = asset_list[i];
+                
+                for (let j = 0; j < type_list.length; j++) {
+                    let img = document.createElement("img");
+                    let type = type_list[j];
+
+                    img.src = `assets/${name}/${name}-${type}-${size}.png`;
+                    img.id = `${name}-${type}-${size}`
+                    
+                    div.appendChild(img);
+                }
+            }
+
+        </script>
+
+
+    </body>
+</html>

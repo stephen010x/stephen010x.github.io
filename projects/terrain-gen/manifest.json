@@ -1,0 +1,18 @@
+{
+    "lang": "en-us",
+    "name": "Bouncing Balls Physics App",
+    "short_name": "Bouncing Balls",
+    "description": "The balls bounce",
+    "start_url": "index.html",
+    "background_color": "#ffffff",
+    "theme_color": "#2f3d58",
+    "//orientation": "natural",
+    "orientation": "portrait"
+    "display": "fullscreen",
+    "icons": [
+        {
+            "src": "icon512.png",
+            "sizes": "512x512"
+        }
+    ]
+}
