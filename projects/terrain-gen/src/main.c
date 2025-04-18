@@ -711,8 +711,8 @@ EM_BOOL frame_loop(double _t, void *user_data) {
     
     //shader_draw(&simple_shader, t);
 
-    shader_draw(&skybox_shader, t);
     if (!wireframe_enable) {
+        shader_draw(&skybox_shader, t);
         shader_draw(&depth_shader, t);
         shader_draw(&terrain_shader, t);
         if (camera.pos[2] > water.pos[2] + 0.5) {
