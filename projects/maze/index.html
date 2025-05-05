@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width"> 
+        <!-- disable the damn caching! -->
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="0"/>
+
+        <title>webgl-c-frame</title>
+
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico?">
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            button {
+	            width: 100%;
+	            height: 200px;
+	            text-align: center;
+	        }
+            #canvas {
+                /*width: 768px;
+                height: 768px;*/
+                /*width: 100vw;
+                height: 100vh;*/
+                /*width: 256px;
+                height: 256px;*/
+            }
+            canvas {
+                image-rendering: optimizeSpeed;             /*Older versions of FF*/
+                image-rendering: -moz-crisp-edges;          /*FF 6.0+*/
+                image-rendering: -webkit-optimize-contrast; /*Safari*/
+                image-rendering: -o-crisp-edges;      /*OS X & Windows Opera (12.02+)*/
+                image-rendering: pixelated;                 /*Awesome future-browsers*/
+                -ms-interpolation-mode: nearest-neighbor;   /*IE*/
+            }
+            html, body {margin: 0; height: 100%; overflow: hidden}
+
+            #controls {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 700px;
+                background-color: rgba(0, 0, 0, 0.8);
+                color: white;
+                text-align: left;
+                padding: 0px 200px;
+                margin: 0;
+                white-space: pre;
+                font-family: monospace;
+            }
+        </style>
+
+        <script>
+            window.onload = function() {
+                console.log('All resources have completely loaded');
+            }
+        </script>
+        
+        <script src="script.js"></script>
+    </head>
+    
+    <body style="background-color:lightgrey;">
+
+        <div id="controls">
+    	    <p>
+<u>Movement</u>
+    
+&lt;up    arrow&gt; - move forward
+&lt;left  arrow&gt; - move left
+&lt;down  arrow&gt; - move backward
+&lt;right arrow&gt; - move right
+
+&lt;w key&gt;       - move forward
+&lt;a key&gt;       - move left
+&lt;s key&gt;       - move backward
+&lt;d key&gt;       - move right
+
+&lt;mouse click&gt; - lock mouse
+
+&lt;mouse move&gt;  - rotate camera (realism mode)
+&lt;shift key&gt;   - sprint        (realism mode)
+
+
+<u>Switch Cameras/Gamemodes</u>
+
+&lt;1 key&gt;       - 2D camera
+&lt;2 key&gt;       - 3D camera
+&lt;3 key&gt;       - toggle dithering
+&lt;4 key&gt;       - realism mode (will lock movement in other modes)
+&lt;5 key&gt;       - switch between dev-modes
+
+
+<u>Others</u>
+
+&lt;h key&gt;       - show this help box
+&lt;b key&gt;       - switch between frame rates
+
+P.S. There is a SECRET at the end of the maze in 
+     realism mode (the topmost room).
+    	    </p>
+    	</div>
+    
+        <canvas id="canvas" style="background-color:white;"></canvas>
+            <!--width="800" height="600"-->
+
+        <canvas id="asset-loader" style="display: none;"></canvas>
+        <!--canvas id="asset-loader" width="400" height="400"></canvas-->
+
+
+        <!--div id="media" style="display: none;-->
+        <div id="media" style="visibility: hidden; position: absolute;">
+
+            <img id="crying-cat" src="assets/crying-cat.jpg">
+            <img id="rock-wall-tex" src="assets/rock_wall_tex.png">
+            <img id="rock-wall-norm" src="assets/rock_wall_norm.png">
+            <img id="rock-wall-norm-512" src="assets/rock_wall_norm_512.png">
+            <img id="rock-wall-white" src="assets/rock_wall_white.png">
+            <img id="rock-wall-white-512" src="assets/rock_wall_white_512.png">
+            <!--img id="rock-wall-smooth" src="assets/rock_wall_smooth.png"-->
+            <img id="test-norm" src="assets/test_norm.png">
+            <img id="torch" src="assets/torch.png">
+            <img id="cat-avatar" src="assets/cat_avatar.png">
+
+            <audio id="nyan-cat-sound"> <source  src="assets/nyan_cat.mp3" type="audio/mpeg"> </audio>
+            <audio id="silent-sound"> <source  src="assets/silence.mp3" type="audio/mpeg"> </audio>
+            <audio id="tense-drone-sound"> <source  src="assets/tense_drone.mp3" type="audio/mpeg">
+                credit: https://freesound.org/people/newlocknew/sounds/676931/
+            </audio>
+            <audio id="somber-sound"> <source  src="assets/somber.mp3" type="audio/mpeg"> </audio>
+            
+            <audio id="step0-sound"> <source  src="assets/steps/steps0.mp3" type="audio/mpeg"> </audio>
+            <audio id="step1-sound"> <source  src="assets/steps/steps1.mp3" type="audio/mpeg"> </audio>
+            <audio id="step2-sound"> <source  src="assets/steps/steps2.mp3" type="audio/mpeg"> </audio>
+            <audio id="step3-sound"> <source  src="assets/steps/steps3.mp3" type="audio/mpeg"> </audio>
+            <audio id="step4-sound"> <source  src="assets/steps/steps4.mp3" type="audio/mpeg"> </audio>
+            <audio id="step5-sound"> <source  src="assets/steps/steps5.mp3" type="audio/mpeg"> </audio>
+            <audio id="step6-sound"> <source  src="assets/steps/steps6.mp3" type="audio/mpeg"> </audio>
+        </div>
+
+        <script>
+            /*{
+                var sound1 = document.getElementById("nyan-cat-sound");
+                var sound2 = sound1.cloneNode(true);
+                setTimeout(function () {sound1.play()}, 1000);
+                setTimeout(function () {sound2.play()}, 6000);
+            }*/
+            
+        </script>
+
+
+        <!--script>
+            window.onload = function() {
+                const canvas_id = "asset-loader";
+                const image_id = "cryingcat";
+                
+                //console.log(canvas_id, image_id);
+                const canvas = document.getElementById(canvas_id);
+                const context = canvas.getContext('2d');
+                const image = document.getElementById(image_id);
+
+                console.log(canvas, context, image);
+
+                canvas.width = image.width;
+                canvas.height = image.height;
+                context.drawImage(image, 0, 0);
+
+                context.fillStyle = 'red';
+                context.fillRect(50, 50, 100, 100);
+
+                var img = document.getElementById('sourceImage');
+            }
+        </script-->
+
+
+        
+
+        <script src="bin/bin.js"></script>
+        
+        <script defer>
+
+            const DYNAMIC      = 0;
+            const FIXED_WIDTH  = 1;
+            const FIXED_HEIGHT = 2;
+
+            let mode = FIXED_HEIGHT;
+
+            //alert("test 6");
+
+            const isMobile = window.innerWidth > window.innerHeight;
+
+            let canvas = document.getElementById("canvas");
+
+
+            function setup_canvas() {
+                let swidth = window.innerWidth;
+                let sheight = window.innerHeight;
+
+                let sratio = swidth/sheight;
+
+                //console.log(swidth, sheight);
+
+                //canvas.height = 256;
+                //canvas.width = Math.round(canvas.height * sratio);
+
+                // TODO:
+                // try to have the c code pull both the style sizes and the canvas
+                // sizes to determine the screen ratio
+
+                if (mode == DYNAMIC) {
+                    if (sratio<1) {
+                        canvas.height = 256;
+                        canvas.width = Math.round(canvas.height * sratio);
+                        //console.log(canvas.width, canvas.height);
+                    } else {
+                        canvas.width = 256;
+                        canvas.height = Math.round(canvas.width / sratio);
+                        //console.log(canvas.width, canvas.height);
+                    }
+                } else if (mode == FIXED_WIDTH) {
+                    canvas.width = 256;
+                    canvas.height = Math.round(canvas.width / sratio);
+                } else if (mode == FIXED_HEIGHT) {
+                    canvas.height = 256;
+                    canvas.width = Math.round(canvas.height * sratio);
+                }
+                
+                canvas.style.width = swidth+"px";
+                canvas.style.height = sheight+"px";
+            }
+            setup_canvas();
+            
+
+            function requestFullscreen() {
+                var elem = document.documentElement;
+            
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.mozRequestFullScreen) { /* Firefox */
+                    elem.mozRequestFullScreen();
+                } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                    elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) { /* IE/Edge */
+                    elem.msRequestFullscreen();
+                }
+            }
+
+            let element = document.getElementById('controls');
+
+            let opacity = 1.0;
+
+            var fadeEffect;
+
+            function hidehelp() {
+                clearInterval(fadeEffect);
+                fadeEffect = setInterval(function () {
+                    var element = document.getElementById('controls');
+                    if (opacity <= 0.1) {
+                        clearInterval(fadeEffect);
+                        element.style.display = 'none';
+                    } else {
+                        element.style.opacity = opacity;
+                        opacity -= 0.1;
+                    }
+                }, 100);
+            }
+
+            document.addEventListener('keydown', function(event) {
+        	    if (event.key === 'h' || event.key === 'H') {
+                    element.style.opacity = 1.0;
+                    element.style.display = 'block';
+                    opacity = 1.0;
+                    clearInterval(fadeEffect);
+        	    } else {
+                    hidehelp();
+        	    }
+        	});
+
+            document.addEventListener("mousedown", function(event) {
+            	hidehelp();
+        	});
+
+            
+            /*
+            document.addEventListener('click', function() {
+                document.body.requestPointerLock();
+            });
+
+            document.addEventListener('pointerlockchange', function() {
+                if (document.pointerLockElement === document.body) {
+                    console.log('Pointer is locked');
+                } else {
+                    console.log('Pointer is unlocked');
+                }
+            });
+
+            document.addEventListener('pointerlockerror', function() {
+                console.error('Error while trying to lock the pointer');
+            });*/
+            
+        
+            // Note that scaling in css doesn't change the resolution
+            // while scaling in js does
+            
+        </script>
+    </body>
+</html>
