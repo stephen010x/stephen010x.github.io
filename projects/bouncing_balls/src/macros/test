@@ -1,0 +1,2 @@
+#!/bin/bash
+gcc -E -H -C -nostdinc macros_test.h -o macros_test.pp.h
