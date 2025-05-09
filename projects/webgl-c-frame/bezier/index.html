@@ -196,6 +196,13 @@
                     elem.msRequestFullscreen();
                 }
             }
+
+
+            window.onload = function() {
+                setTimeout(function() {
+                    alert("Click and drag to rotate camera");
+                }, 300);
+            }
             
         
             // weird. Scaling in css doesn't change the resolution

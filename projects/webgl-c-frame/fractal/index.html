@@ -196,6 +196,13 @@
                     elem.msRequestFullscreen();
                 }
             }
+
+
+            window.onload = function() {
+                setTimeout(function() {
+                    alert("WASD keys to move, Arrow keys to zoom and rotate");
+                }, 300);
+            }
             
         
             // weird. Scaling in css doesn't change the resolution
