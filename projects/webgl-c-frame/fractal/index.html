@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width"> 
+        <!-- disable the damn caching! -->
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <meta http-equiv="Expires" content="0"/>
+
+        <title>webgl-c-frame</title>
+
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico?">
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            button {
+	            width: 100%;
+	            height: 200px;
+	            text-align: center;
+	        }
+            #canvas {
+                /*width: 768px;
+                height: 768px;*/
+                /*width: 100vw;
+                height: 100vh;*/
+                /*width: 256px;
+                height: 256px;*/
+            }
+            canvas {
+                image-rendering: optimizeSpeed;             /*Older versions of FF*/
+                image-rendering: -moz-crisp-edges;          /*FF 6.0+*/
+                image-rendering: -webkit-optimize-contrast; /*Safari*/
+                image-rendering: -o-crisp-edges;      /*OS X & Windows Opera (12.02+)*/
+                image-rendering: pixelated;                 /*Awesome future-browsers*/
+                -ms-interpolation-mode: nearest-neighbor;   /*IE*/
+            }
+            html, body {margin: 0; height: 100%; overflow: hidden}
+        </style>
+        
+        <!--script src="script.js"></script-->
+    </head>
+    
+    <body style="background-color:lightgrey;">
+        <canvas id="canvas" style="background-color:white"></canvas>
+            <!--width="800" height="600"-->
+
+
+        <script src="bin/bin.js"></script>
+        
+        <script defer>
+
+            //alert("test 6");
+
+            const isMobile = window.innerWidth > window.innerHeight;
+
+            let canvas = document.getElementById("canvas");
+
+
+            function setup_canvas() {
+                let swidth = window.innerWidth;
+                let sheight = window.innerHeight;
+
+                let sratio = swidth/sheight;
+
+                //console.log(swidth, sheight);
+
+                if (sratio>1) {
+                    canvas.height = 256;
+                    canvas.width = Math.round(canvas.height * sratio);
+                    //console.log(canvas.width, canvas.height);
+                } else {
+                    canvas.width = 256;
+                    canvas.height = Math.round(canvas.width / sratio);
+                    //console.log(canvas.width, canvas.height);
+                }
+                
+                canvas.style.width = swidth+"px";
+                canvas.style.height = sheight+"px";
+            }
+
+
+            /*try {
+                if (!isMobile && window.DeviceOrientationEvent) {
+                    console.log("device orientation event found");
+                    const button = document.createElement("button");
+                    canvas.style.display = "none";
+                    button.innerText = "Enable device orientation";
+                    document.body.appendChild(button);
+
+                    button.addEventListener("click", function () {
+                        if (typeof window.DeviceOrientationEvent.requestPermission === 'function') {
+                            window.DeviceOrientationEvent.requestPermission()
+                            .then(permissionState => {
+                                if (permissionState === 'granted') {
+                                    button.style.display = "none";
+                                } else {
+                                    alert("Device orientation permission not granted");                                  }
+                            }).catch(console.error);
+                        } else {
+                            button.style.display = "none";
+                        }
+                        canvas.style.display = "inline";
+                        
+                    });
+                } else {
+                    console.log("no device orientation event");
+                    setup_canvas();
+                }
+            } catch (error) {
+                alert(error);
+                console.log(error);
+            }*/
+
+            setup_canvas();
+            
+
+
+            /*function enter_main() {
+                //alert("main");
+                if (Module['calledRun'] || Module['calledMain']) {
+                    //alert("MAIN");
+                    Module.ccall('main', 'number', [], []);
+                } else {
+                    Module['onRuntimeInitialized'] = function () {
+                        //alert("MAIN");
+                        Module.ccall('main', 'number', [], []);
+                    }
+                }
+            }*/
+
+
+            /*try {if (!isMobile && window.DeviceOrientationEvent) {
+                //alert("oh?");
+                console.log("device orientation event found");
+                const button = document.createElement("button");
+                canvas.style.display = "none";
+                //button.innerText = "Enter Fullscreen";
+                button.innerText = "Enable device orientation";
+                document.body.appendChild(button);
+
+                button.addEventListener("click", function () {
+                    //alert("wtf??");
+                    // TODO: setup_canvas is somehow pulling the old values
+                    //       even after this call. Fix this!!!
+                    //requestFullscreen();
+                    if (typeof window.DeviceOrientationEvent.requestPermission === 'function') {
+                        window.DeviceOrientationEvent.requestPermission()
+                        .then(permissionState => {
+                            if (permissionState === 'granted') {
+                                button.style.display = "none";
+                                //alert("nani?");
+                            } else {
+                                alert("Device orientation permission not granted");
+                                
+                            }
+                            //alert("yoy?");
+                        })
+                        /\*.catch(error) {
+                            alert(error);
+                            console.log(error);
+                        };*\/
+                    } else {
+                        button.style.display = "none";
+                    }
+                    canvas.style.display = "inline";
+                    setup_canvas();
+                    enter_main();
+                });
+            } else {
+                //alert("heck");
+                console.log("no device orientation event");
+                setup_canvas();
+                enter_main();
+            }} catch (error) {
+                alert(error);
+                console.log(error);
+            }*/
+
+
+
+
+            function requestFullscreen() {
+                var elem = document.documentElement;
+            
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.mozRequestFullScreen) { /* Firefox */
+                    elem.mozRequestFullScreen();
+                } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                    elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) { /* IE/Edge */
+                    elem.msRequestFullscreen();
+                }
+            }
+            
+        
+            // weird. Scaling in css doesn't change the resolution
+            // while scaling in js does
+            
+        </script>
+    </body>
+</html>
